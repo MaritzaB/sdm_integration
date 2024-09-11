@@ -27,10 +27,10 @@ cur = connection(db_params)
 
 databases = {
     # name of the database: path to the query file
-    #'trajectories': 'connection/db_queries/query_elapid.sql',
-    #'count_data': 'connection/db_queries/count_data.sql',
-    #'background_points': 'connection/db_queries/background_points.sql',
-    #'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
+    'trajectories': 'connection/db_queries/query_elapid.sql',
+    'count_data': 'connection/db_queries/count_data.sql',
+    'background_points': 'connection/db_queries/background_points.sql',
+    'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
     'convex_hull': 'connection/db_queries/convex_hull.sql',
 }
 

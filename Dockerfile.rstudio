@@ -1,12 +1,13 @@
 FROM rocker/geospatial:latest as builder
 
 RUN apt-get update && apt-get install -y \
+    libudunits2-dev \
     libgdal-dev \
     libproj-dev
 #
 #COPY packages.txt /tmp/packages.txt
 #RUN R -e "install.packages(c('devtools', scan('/tmp/packages.txt', what = 'character'), repos = 'https://cloud.r-project.org/'), dependencies = TRUE)"
-RUN R -e "install.packages(c('biomod', 'dismo'), dependencies = TRUE)"
+RUN R -e "install.packages(c('biomod', 'dismo', 'ggplot', 'ggmap', 'sf'), dependencies = TRUE)"
 #RUN R -e "devtools::install_github('marlonecobos/ellipsenm')"
 #RUN R -e "devtools::install_github('marlonecobos/kuenm')"
 #RUN R -e "devtools::install_github('luismurao/ntbox', focer=TRUE)"
@@ -22,6 +23,7 @@ COPY --from=builder /usr/local/lib/R/site-library /usr/local/lib/R/site-library
 
 
 RUN apt-get update && apt-get install -y \
+    libudunits2-dev \
     libgdal-dev \
     libproj-dev
 
