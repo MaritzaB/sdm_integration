@@ -13,8 +13,20 @@ services:
     volumes:
       - ${PWD}:/workdir
     environment:
+      - USER=rstudio
       - PASSWORD=yourpassword
     container_name: r-studio
+
+  wallace:
+    build:
+      context: .
+      dockerfile: Dockerfile.wallace
+    ports:
+      - "3333:3838"
+    volumes:
+      - ${PWD}:/workdir
+    container_name: wallace
+    
     
   niche-modelling:
     build:

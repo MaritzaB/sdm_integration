@@ -5,13 +5,18 @@ build:
 
 up_rstudio:
 	docker compose up --build --detach
+	@echo "Access R-Studio at: localhost:8787"
 	docker compose exec r-studio bash -c "cd workdir && exec bash"
+
 
 up_jupyter:
 	docker compose up --build --detach
 	docker compose exec niche-modelling bash -c "cd workdir && exec bash"
 
-
+wallace:
+	docker compose up --build --detach
+	@echo "Access Wallace at: http://127.0.0.1:3333/sample-apps/SIG/wallace/shiny/"
+	docker compose exec wallace bash -c "cd workdir && exec bash"
 
 down:
 	docker system prune --force

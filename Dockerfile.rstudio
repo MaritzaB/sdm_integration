@@ -1,32 +1,32 @@
 FROM rocker/geospatial:latest as builder
 
 RUN apt-get update && apt-get install -y \
-    libproj-dev \
     libgdal-dev \
-    libgeos-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libgit2-dev \
-    libxml2-dev \
-    build-essential \
-    gdal-bin
-
-COPY packages.txt /tmp/packages.txt
+    libproj-dev
+#
+#COPY packages.txt /tmp/packages.txt
 #RUN R -e "install.packages(c('devtools', scan('/tmp/packages.txt', what = 'character'), repos = 'https://cloud.r-project.org/'), dependencies = TRUE)"
-RUN R -e "devtools::install_github('marlonecobos/ellipsenm')"
-RUN R -e "devtools::install_github('marlonecobos/kuenm')"
-RUN R -e "devtools::install_github('luismurao/ntbox', focer=TRUE)"
-RUN R -e "devtools::install_github('luismurao/hsi')"
+RUN R -e "install.packages(c('biomod', 'dismo'), dependencies = TRUE)"
+#RUN R -e "devtools::install_github('marlonecobos/ellipsenm')"
+#RUN R -e "devtools::install_github('marlonecobos/kuenm')"
+#RUN R -e "devtools::install_github('luismurao/ntbox', focer=TRUE)"
+#RUN R -e "devtools::install_github('luismurao/hsi')"
+RUN R -e "devtools::install_github('rinnan/CENFA')"
 
-# Esta parte del Dockerfile es importante porque es la que se encarga de copiar
-# las librerías de R y Python instaladas en la etapa de construcción
-FROM rocker/rstudio:latest
+
+
+FROM rocker/rstudio:4.4.0
 
 # Copiar las librerías de R instaladas en la etapa de construcción
 COPY --from=builder /usr/local/lib/R/site-library /usr/local/lib/R/site-library
 
-# Exponer el puerto 8787 para RStudio y 8686 para Jupyter
+
+RUN apt-get update && apt-get install -y \
+    libgdal-dev \
+    libproj-dev
+
+# Exponer el puerto 8787 para RStudio
 EXPOSE 8787
 
-# Iniciar RStudio y otros servicios (Jupyter)
+# Iniciar RStudio
 CMD ["/init"]
