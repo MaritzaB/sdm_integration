@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
 #
 #COPY packages.txt /tmp/packages.txt
 #RUN R -e "install.packages(c('devtools', scan('/tmp/packages.txt', what = 'character'), repos = 'https://cloud.r-project.org/'), dependencies = TRUE)"
-RUN R -e "install.packages(c('biomod', 'dismo', 'ggplot', 'ggmap', 'sf'), dependencies = TRUE)"
+RUN R -e "install.packages(c('biomod2', 'dismo', 'ggplot', 'ggmap', 'sf'), dependencies = TRUE)"
 #RUN R -e "devtools::install_github('marlonecobos/ellipsenm')"
 #RUN R -e "devtools::install_github('marlonecobos/kuenm')"
 #RUN R -e "devtools::install_github('luismurao/ntbox', focer=TRUE)"

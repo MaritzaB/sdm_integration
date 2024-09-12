@@ -19,12 +19,14 @@ Rscript -e 'installed.packages()[, "Package"]'
 1. [https://biomodhub.github.io/biomod2/articles/vignette_pseudoAbsences.html#:~:text=Pseudo%2Dabsences%20(sometimes%20also%20referred,presences)%20against%20what%20is%20available.](https://biomodhub.github.io/biomod2/articles/vignette_pseudoAbsences.html#:~:text=Pseudo%2Dabsences%20(sometimes%20also%20referred,presences)%20against%20what%20is%20available.)
 1. [Tutorial
    Biomod](https://github.com/r-forge/biomod/blob/master/pkg/BIOMOD/inst/doc/Biomod%20Manual.pdf)
-1. [Tutorial Biomod2](https://cran.r-project.org/web/packages/biomod2/biomod2.pdf)
+1. [Tutorial
+   Biomod2](https://cran.r-project.org/web/packages/biomod2/biomod2.pdf)
+1. [Ejemplo de un vatito en Youtube](https://www.youtube.com/watch?v=QrwqhJgRbnY)
 
 
 ## ENFA
 
-1. [](https://search.r-project.org/CRAN/refmans/adehabitatHS/html/enfa.html)
-1. [](https://www.rdocumentation.org/packages/CENFA/versions/1.1.1/topics/enfa)
+1. [ejemplo1 ENFA](https://search.r-project.org/CRAN/refmans/adehabitatHS/html/enfa.html)
+1. [Ejemplo2 ENFA](https://www.rdocumentation.org/packages/CENFA/versions/1.1.1/topics/enfa)
 
 
