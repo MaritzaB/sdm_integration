@@ -44,21 +44,23 @@ proj4string(env)
 #convex_hull <- read.csv("data/convex_hull.csv")
 #head(convex_hull)
 
-set.seed(123)
+set.seed(555)
 
 # Create the biomod2 object
 biomod_data <- BIOMOD_FormatingData(resp.var = myResp,
                                     expl.var = env,
                                     resp.xy = myRespXY,
                                     resp.name = myRespName,
-                                    PA.nb.rep = 2,
-                                    PA.nb.absences = 100,
-                                    PA.strategy = "random", # can be "random", "sre" or "disk"
+                                    PA.nb.rep = 10,
+                                    PA.nb.absences = 5000,
+                                    PA.strategy = "sre", # can be "random", "sre" or "disk"
                                     PA.dist.min = NULL, # for 'disk' strategy
                                     PA.dist.max = NULL, # for 'disk' strategy
                                     PA.sre.quant = 0.1,
+                                    filter.raster = TRUE,
                                     na.rm = TRUE)
 
+cat("biomod_data object created with pseudo-absences\n")
 str(biomod_data)
 
 pa_table <- biomod_data@PA.table
@@ -90,15 +92,35 @@ spatial_data_df <- as.data.frame(presence_absence_data)
 head(spatial_data_df)
 
 # Escribir el data frame en un archivo CSV
-write.csv(spatial_data_df, "presence_absence_data.csv", row.names = FALSE)
+presence_absence_file <- "presence_absence_data.csv"
+write.csv(spatial_data_df, presence_absence_file, row.names = FALSE)
 
 # Confirmación de que se escribió el archivo
-cat("Archivo CSV generado: presence_absence_data.csv\n")
+cat(paste("Archivo", presence_absence_file, "creado exitosamente\n"))
+
+# Guardar el gráfico en un archivo PNG
+plot_name <- "raster_P_PS_disk.png"
+png(plot_name, width = 800, height = 600)
 
 # Plotear el primer raster del stack 'env'
-png("primer_raster.png", width = 800, height = 600)
-plot(env[[1]], main = "Primer Raster del Stack")
-points(presence_absence_data, col='red') 
-#points(chuck.sp.utm, col='black')
+plot(env[[1]], main = "Datos de presencia/pseudo-ausencia creados con método 'sre'")
+
+# Extraer las coordenadas de presencias y pseudo-ausencias
+presence_points <- presence_absence_data$Presence == 1
+pa1_points <- presence_absence_data$PA1 == 0
+pa2_points <- presence_absence_data$PA2 == 0
+
+# Extraer las coordenadas de los puntos
+coords <- coordinates(presence_absence_data)
+
+# Plotear los puntos de presencias (negro)
+points(coords[presence_points, ], col = 'black', pch = 4)
+
+# Plotear los puntos de pseudo-ausencias (rojo)
+points(coords[pa1_points, ], col = 'red', pch = 16)
+points(coords[pa2_points, ], col = 'red', pch = 16)
+
+# Finalizar el dispositivo gráfico
 dev.off()
+
 

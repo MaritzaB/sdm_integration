@@ -29,4 +29,7 @@ Rscript -e 'installed.packages()[, "Package"]'
 1. [ejemplo1 ENFA](https://search.r-project.org/CRAN/refmans/adehabitatHS/html/enfa.html)
 1. [Ejemplo2 ENFA](https://www.rdocumentation.org/packages/CENFA/versions/1.1.1/topics/enfa)
 
+## SP_Thin examples
 
+- [Example1](https://plantarum.ca/2021/10/26/r-gridsample/)
+- [Example2](https://rpubs.com/confrench33/spatial-rarification-pop-structure)
