@@ -1,14 +1,95 @@
 import psycopg2, psycopg2.extras
 import pandas as pd
 import os
+from shapely import wkt
+import geopandas as gpd
 
-db_params = {
-    "dbname": "metro_cdmx",
-    "user": "admin",
-    "password": "password",
-    "host": "postgis",
-    "port": "5432",
-}
+def create_directory(directory):
+    """
+    Crea un directorio si no existe.
+    Parámetros:
+    - directory: El directorio a crear.
+    """
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+def read_query_from_file(db_file):
+    """
+    Lee el contenido de un archivo SQL.
+    Parámetros:
+    - db_file: La ruta al archivo SQL.
+    Retorna:
+    - El contenido del archivo SQL como una cadena de texto.
+    """
+    with open(db_file, 'r') as file:
+        query = file.read()
+    return query
+
+def execute_query(cur, query):
+    """
+    Ejecuta una consulta SQL en la base de datos.
+
+    Parámetros:
+    - cur: Cursor de la base de datos.
+    - query: La consulta SQL a ejecutar.
+    
+    Retorna:
+    - results: Los resultados de la consulta.
+    - column_names: Los nombres de las columnas.
+    """
+    cur.execute(query)
+    results = cur.fetchall()
+    column_names = [desc[0] for desc in cur.description]
+    return results, column_names
+
+def save_results_to_csv(df, db_name, directory='data'):
+    """
+    Guarda los resultados de la consulta en un archivo CSV.
+
+    Parámetros:
+    - df: DataFrame con los resultados.
+    - db_name: Nombre de la base de datos o tabla, usado como nombre de archivo.
+    - directory: Directorio donde se guardará el archivo CSV.
+    """
+    create_directory(directory)
+    csv_path = os.path.join(directory, f'{db_name}.csv')
+    df.to_csv(csv_path, index=False)
+    print(f'Data saved in {csv_path}')
+
+def safe_wkt_load(x, row_id):
+    try:
+        return wkt.loads(x)
+    except Exception as e:
+        print(f"Error al cargar WKT para la fila ID {row_id}: {e}")
+        return None
+
+def safe_wkb_load(x):
+        try:
+            return wkb.loads(x, hex=True)
+        except Exception as e:
+            print(f"Error al cargar WKB para la fila {x}: {e}")
+            return None  # Retornar None en caso de error
+
+def save_results_to_shapefile(df, db_name, directory='data', crs='EPSG:4326'):
+    """
+    Guarda los resultados de una consulta SQL en un archivo shapefile (.shp).
+
+    Parámetros:
+    - df: DataFrame con los resultados.
+    - db_name: Nombre de la base de datos o tabla, usado como nombre de archivo.
+    - directory: Directorio donde se guardará el archivo shapefile.
+    - crs: Sistema de referencia de coordenadas (por defecto es EPSG:4326).
+    """
+    create_directory(directory)
+    df['geometry'] = df.apply(lambda row: safe_wkt_load(row['geom'], row['id']), axis=1)
+    df['geometry'] = df['geom'].apply(lambda x: wkt.loads(x))
+    gdf = gpd.GeoDataFrame(df, geometry='geometry')
+    gdf.set_crs(crs, inplace=True)
+    shapefile_path = os.path.join(directory, f'{db_name}.shp')
+    gdf.to_file(shapefile_path, driver='ESRI Shapefile')
+    print(f'Shapefile guardado en {shapefile_path}')
+
+
 def connection(db_parameters):
     try:
         connection = psycopg2.connect(**db_parameters)
@@ -21,10 +102,18 @@ def connection(db_parameters):
     
     return connection.cursor()
 
+db_params = {
+    "dbname": "metro_cdmx",
+    "user": "admin",
+    "password": "password",
+    "host": "postgis",
+    "port": "5432",
+}
+
+# Connect to the database
 cur = connection(db_params)
 
-# Database operations
-
+# Databases to query
 databases = {
     # name of the database: path to the query file
     'trajectories': 'connection/db_queries/query_elapid.sql',
@@ -34,27 +123,12 @@ databases = {
     'convex_hull': 'connection/db_queries/convex_hull.sql',
 }
 
+# Execute the queries and save the results to CSV
 for db_name, db_file in databases.items():
-    with open(db_file, 'r') as file:
-    # Read the entire file content
-        database = file.read()
-        print('Querying data: ', db_name)
-    
-    # Execute the query
-    query = database
-    cur.execute(query)
-    results = cur.fetchall()
-    column_names = [desc[0] for desc in cur.description]
-
-    # Convert data into DataFrame
-    df = f"{db_name}_df"
-    df = pd.DataFrame(results)
-    df.columns = column_names
-
-    # Create directory if it doesn't exist
-    dir = 'data'
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-
-    df.to_csv(f'{dir}/{db_name}.csv', index=False)
-    print(f'Data saved in {dir}/{db_name}.csv')
+    query = read_query_from_file(db_file)
+    results, column_names = execute_query(cur, query)
+    df = pd.DataFrame(results, columns=column_names)
+    if db_name == 'convex_hull':
+        save_results_to_shapefile(df, db_name, directory='data')
+    else:
+        save_results_to_csv(df, db_name, directory='data')
