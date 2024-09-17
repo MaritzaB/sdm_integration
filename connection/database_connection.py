@@ -13,6 +13,7 @@ def create_directory(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+
 def read_query_from_file(db_file):
     """
     Lee el contenido de un archivo SQL.
@@ -24,6 +25,7 @@ def read_query_from_file(db_file):
     with open(db_file, 'r') as file:
         query = file.read()
     return query
+
 
 def execute_query(cur, query):
     """
@@ -42,6 +44,7 @@ def execute_query(cur, query):
     column_names = [desc[0] for desc in cur.description]
     return results, column_names
 
+
 def save_results_to_csv(df, db_name, directory='data'):
     """
     Guarda los resultados de la consulta en un archivo CSV.
@@ -56,19 +59,6 @@ def save_results_to_csv(df, db_name, directory='data'):
     df.to_csv(csv_path, index=False)
     print(f'Data saved in {csv_path}')
 
-def safe_wkt_load(x, row_id):
-    try:
-        return wkt.loads(x)
-    except Exception as e:
-        print(f"Error al cargar WKT para la fila ID {row_id}: {e}")
-        return None
-
-def safe_wkb_load(x):
-        try:
-            return wkb.loads(x, hex=True)
-        except Exception as e:
-            print(f"Error al cargar WKB para la fila {x}: {e}")
-            return None  # Retornar None en caso de error
 
 def save_results_to_shapefile(df, db_name, directory='data', crs='EPSG:4326'):
     """
@@ -81,10 +71,11 @@ def save_results_to_shapefile(df, db_name, directory='data', crs='EPSG:4326'):
     - crs: Sistema de referencia de coordenadas (por defecto es EPSG:4326).
     """
     create_directory(directory)
-    df['geometry'] = df.apply(lambda row: safe_wkt_load(row['geom'], row['id']), axis=1)
     df['geometry'] = df['geom'].apply(lambda x: wkt.loads(x))
     gdf = gpd.GeoDataFrame(df, geometry='geometry')
     gdf.set_crs(crs, inplace=True)
+    if 'geom' in gdf.columns:
+        gdf = gdf.drop(columns=['geom'])
     shapefile_path = os.path.join(directory, f'{db_name}.shp')
     gdf.to_file(shapefile_path, driver='ESRI Shapefile')
     print(f'Shapefile guardado en {shapefile_path}')
@@ -102,6 +93,7 @@ def connection(db_parameters):
     
     return connection.cursor()
 
+
 db_params = {
     "dbname": "metro_cdmx",
     "user": "admin",
@@ -109,6 +101,7 @@ db_params = {
     "host": "postgis",
     "port": "5432",
 }
+
 
 # Connect to the database
 cur = connection(db_params)
@@ -129,6 +122,6 @@ for db_name, db_file in databases.items():
     results, column_names = execute_query(cur, query)
     df = pd.DataFrame(results, columns=column_names)
     if db_name == 'convex_hull':
-        save_results_to_shapefile(df, db_name, directory='data')
+        save_results_to_shapefile(df, db_name, directory='data/binary')
     else:
         save_results_to_csv(df, db_name, directory='data')
