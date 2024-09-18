@@ -4,6 +4,7 @@ import os
 from shapely import wkt
 import geopandas as gpd
 
+
 def create_directory(directory):
     """
     Crea un directorio si no existe.
@@ -115,6 +116,7 @@ databases = {
     'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
     'convex_hull': 'connection/db_queries/convex_hull.sql',
 }
+
 
 # Execute the queries and save the results to CSV
 for db_name, db_file in databases.items():
