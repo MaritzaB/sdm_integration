@@ -5,48 +5,37 @@ library(sf)
 library(biomod2)
 library(dplyr)
 library(sp)
-
-source("src/crop_training_area.R")
+source("src/process_raster_data.R")
+source("src/process_occurrence_data.R")
 
 # Load the environmental data
-year <- "2014"
-month <- "01"
+year <- '2014'
+month <- '01'
 env <- generate_masked_raster(year, month)
+species_occurrence_data <- get_occurrence_data(year, month)
 
-# Load the data
-main_dir <- ""
-occurrences_file <- "data/trajectories.csv"
-DataSpecies <- read.csv(occurrences_file)
-head(DataSpecies)
-
-# Select the name of the studied species
-myRespName <- 'phoebastria_immutabilis'
-
-# Get corresponding presence/absence data
-myResp <- as.numeric(DataSpecies[, myRespName])
-
-# Get corresponding XY coordinates
-myRespXY <- DataSpecies[, c('longitude', 'latitude')]
-
+species_presence_data <- species_occurrence_data$presence_data
+species_coordinates <- species_occurrence_data$coordinates
+studied_species_name <- species_occurrence_data$species_name
 
 set.seed(555)
-
+print(dim(species_presence_data)[1])
 # Create the biomod2 object
-biomod_data <- BIOMOD_FormatingData(resp.var = myResp,
+biomod_data <- BIOMOD_FormatingData(resp.var = species_presence_data,
                                     expl.var = env,
-                                    resp.xy = myRespXY,
-                                    resp.name = myRespName,
+                                    resp.xy = species_coordinates,
+                                    resp.name = studied_species_name,
                                     PA.nb.rep = 10,
                                     PA.nb.absences = 5000,
-                                    PA.strategy = "sre", # can be "random", "sre" or "disk"
-                                    PA.dist.min = NULL, # for 'disk' strategy
-                                    PA.dist.max = NULL, # for 'disk' strategy
+                                    PA.strategy = "sre",
+                                    PA.dist.min = NULL,
+                                    PA.dist.max = NULL,
                                     PA.sre.quant = 0.1,
                                     filter.raster = TRUE,
                                     na.rm = TRUE)
 
-cat("biomod_data object created with pseudo-absences\n")
-str(biomod_data)
+#cat("biomod_data object created with pseudo-absences\n")
+biomod_data
 
 pa_table <- biomod_data@PA.table
 coordinates <- biomod_data@coord
