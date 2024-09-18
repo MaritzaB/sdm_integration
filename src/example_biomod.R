@@ -6,29 +6,17 @@ library(biomod2)
 library(dplyr)
 library(sp)
 
+source("src/crop_training_area.R")
+
+# Load the environmental data
+year <- "2014"
+month <- "01"
+env <- generate_masked_raster(year, month)
+
 # Load the data
 main_dir <- ""
 occurrences_file <- "data/trajectories.csv"
-
-raster_dir <- "resampled_data/2014/01/"
-rasters <- list(
-    sst = "sst_resampled.tif",
-    chlc = "chlor_a_resampled.tif",
-    eastward_wind = "eastward_wind.tif",
-    northward_wind = "northward_wind.tif"
-)
-
-load_raster <- function(file_name) {
-  raster(file.path(raster_dir, file_name))
-}
-
 DataSpecies <- read.csv(occurrences_file)
-sst <- load_raster(rasters$sst)
-chlc <- load_raster(rasters$chlc)
-eastward_wind <- load_raster(rasters$eastward_wind)
-northward_wind <- load_raster(rasters$northward_wind)
-env <- stack(sst, chlc, eastward_wind, northward_wind)
-env
 head(DataSpecies)
 
 # Select the name of the studied species
@@ -40,9 +28,6 @@ myResp <- as.numeric(DataSpecies[, myRespName])
 # Get corresponding XY coordinates
 myRespXY <- DataSpecies[, c('longitude', 'latitude')]
 
-proj4string(env)
-#convex_hull <- read.csv("data/convex_hull.csv")
-#head(convex_hull)
 
 set.seed(555)
 
