@@ -36,8 +36,8 @@ generate_masked_raster <- function(year, month) {
   rasters <- c(
     sst = "sst_resampled.tif",
     chlc = "chlor_a_resampled.tif",
-    eastward_wind = "wind_speed.tif",
-    northward_wind = "wind_direction.tif"
+    wind_speed = "wind_speed.tif",
+    wind_direction = "wind_direction.tif"
   )
 
   polygon <- load_polygon()

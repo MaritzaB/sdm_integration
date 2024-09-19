@@ -11,10 +11,10 @@ get_occurrence_data <- function(year, month) {
     filter(nyear == year, nmonth == month) %>%
     select(longitude, latitude, phoebastria_immutabilis)
 
-  species_name <- 'phoebastria_immutabilis'
-  species_presence <- as.numeric(filtered_data[, species_name])
+  species_name <- "phoebastria_immutabilis"
+  species_presence <- filtered_data[, species_name]
   species_coordinates <- filtered_data[, c('longitude', 'latitude')]
-  
+
   return(list(
     presence_data = species_presence,
     coordinates = species_coordinates,
