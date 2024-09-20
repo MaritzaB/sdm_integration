@@ -30,8 +30,12 @@ disconnection:
 	python3 connection/database_disconnection.py
 
 clean:
-	rm --force -R data/
+	rm -rf maps/
+	rm -rf model_dataset/
 	clear
+
+full_clean: clean
+	rm --force -R data/
 
 network:
 	docker network create qgis_devtools_postgis_net
