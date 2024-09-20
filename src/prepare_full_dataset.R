@@ -6,6 +6,7 @@ library(dplyr)
 source("functions/process_raster_data.R")
 source("functions/process_occurrence_data.R")
 source("functions/generate_pseudo_absences.R")
+source("functions/plot_presence_absence.R")
 
 # Definir la lista de tuplas con año y mes específicos
 year_month_list <- list(
@@ -30,17 +31,13 @@ for (year_month in year_month_list) {
     cat("Error al procesar year:", year, "month:", month, "\n")
     return(NULL)
   })
+  raster_file <- generate_masked_raster(year, month)
+  plot_species_distribution(raster_file, temp_dataset)
 
   if (!is.null(temp_dataset)) {
     full_ml_dataset <- rbind(full_ml_dataset, temp_dataset)
   }
 }
-
-
-
-print(dim(full_ml_dataset))
-print(head(full_ml_dataset))
-
 
 output_directory <- "model_dataset"
 if (!dir.exists(output_directory)) {

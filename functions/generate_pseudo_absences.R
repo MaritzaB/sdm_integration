@@ -64,3 +64,4 @@ create_modeling_dataset <- function(year, month) {
   final_dataset <- prepare_dataset(biomod_data, year, month)
   return(final_dataset)
 }
+
