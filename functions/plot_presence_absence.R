@@ -1,6 +1,7 @@
-
-library(terra)
-source("functions/generate_pseudo_absences.R")
+suppressPackageStartupMessages({
+  library(terra)
+  source("functions/generate_pseudo_absences.R")
+})
 
 plot_raster_with_points <- function(raster, df, output_file) {
 

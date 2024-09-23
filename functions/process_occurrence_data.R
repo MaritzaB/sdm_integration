@@ -1,4 +1,6 @@
-library(dplyr)
+suppressPackageStartupMessages({
+  library(dplyr)
+})
 
 get_occurrence_data <- function(year, month) {
   occurrences_file <- "data/trajectories.csv"

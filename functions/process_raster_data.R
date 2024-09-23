@@ -1,5 +1,7 @@
-library(terra)
-library(sf)
+suppressPackageStartupMessages({
+  library(terra)
+  library(sf)
+})
 
 # Función para cargar rásteres
 load_raster <- function(raster_dir, file_name) {

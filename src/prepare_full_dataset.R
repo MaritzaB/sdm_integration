@@ -1,12 +1,14 @@
-library(dismo)
-library(terra)
-library(raster)
-library(biomod2)
-library(dplyr)
-source("functions/process_raster_data.R")
-source("functions/process_occurrence_data.R")
-source("functions/generate_pseudo_absences.R")
-source("functions/plot_presence_absence.R")
+suppressPackageStartupMessages({
+  library(dismo)
+  library(terra)
+  library(raster)
+  library(biomod2)
+  library(dplyr)
+  source("functions/process_raster_data.R")
+  source("functions/process_occurrence_data.R")
+  source("functions/generate_pseudo_absences.R")
+  source("functions/plot_presence_absence.R")
+})
 
 # Definir la lista de tuplas con año y mes específicos
 year_month_list <- list(
@@ -26,7 +28,7 @@ for (year_month in year_month_list) {
   month <- year_month[2]
 
   temp_dataset <- tryCatch({
-    create_modeling_dataset(year, month)
+    create_modeling_dataset(year, month, apply_filter_raster = FALSE)
   }, error = function(e) {
     cat("Error al procesar year:", year, "month:", month, "\n")
     return(NULL)
