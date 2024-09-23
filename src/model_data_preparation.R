@@ -23,32 +23,26 @@ calculate_proportions(train_data, test_data, column_name = "species_data")
 
 set.seed(24)
 
+environmental_features <- c("sst", "chlc", "wind_speed", "wind_direction")
+coordinates_columns <- c("x", "y")
+
 species_presence_data_train <- train_data$species_data
-environmental_variables_train <- train_data[, c("sst", "chlc", "wind_speed", "wind_direction")]
-coordinates_train <- train_data[, c("x", "y")]
+environmental_variables_train <- train_data[, environmental_features]
+coordinates_train <- train_data[, coordinates_columns]
 
 species_presence_data_test <- test_data$species_data
-environmental_variables_test <- test_data[, c("sst", "chlc", "wind_speed", "wind_direction")]
-coordinates_test <- test_data[, c("x", "y")]
+environmental_variables_test <- test_data[, environmental_features]
+coordinates_test <- test_data[, coordinates_columns]
 
-# Crear el objeto BIOMOD_FormatingData con parámetros adicionales
+# Crear el objeto BIOMOD_FormatingData
 species_biomod_data <- BIOMOD_FormatingData(
   resp.var = species_presence_data_train,
   expl.var = environmental_variables_train,
   resp.xy = coordinates_train,
-  resp.name = 'Proebastria Immutabilis',
-  
+  resp.name = 'Phoebastria Immutabilis',
   eval.resp.var = species_presence_data_test,
   eval.expl.var = environmental_variables_test,
-  eval.resp.xy = coordinates_test,
-  #
-  #PA.nb.rep = 0,
-  #PA.nb.absences = NULL,
-  #PA.strategy = NULL,
-  #PA.dist.min = NULL,
-  #PA.dist.max = NULL,
-  #PA.sre.quant = NULL,
-  #na.rm = TRUE 
+  eval.resp.xy = coordinates_test
 )
 
 # Mostrar resumen del objeto creado
@@ -63,27 +57,24 @@ print(species_biomod_data)
 #)
 #
 
-# Configurar una semilla para reproducibilidad
 set.seed(24)
-
-# Preparar los datos (asumiendo que ya tienes el objeto `species_biomod_data`)
-# Puedes crear el objeto `species_biomod_data` como lo hicimos previamente si no está definido
 
 # Definir los algoritmos de clasificación binaria que deseas utilizar
 
 # binary_algorithms <- c("GLM", "RF", "GAM", "GBM")
+binary_algorithms <- c("RF", "GLM")
 
-algorithm_rf <- "RF"
+ 
+myBiomodModelOut <- BIOMOD_Modeling(
+  bm.format = species_biomod_data,
+  modeling.id = 'Prueba',
+  models = binary_algorithms,
+  CV.strategy = 'random',
+  CV.nb.rep = 2,
+  CV.perc = 0.8,
+  OPT.strategy = 'bigboss',
+  metric.eval = c('TSS','ROC', 'ACCURACY'),
+  var.import = 3,
+  seed.val = 42)
 
-
-#myBiomodModelOut <- BIOMOD_Modeling(bm.format = species_biomod_data,
-#  modeling.id = 'AllModels',
-#  models = c('RF', 'GLM'),
-#  CV.strategy = 'random',
-#  CV.nb.rep = 2,
-#  CV.perc = 0.8,
-#  OPT.strategy = 'bigboss',
-#  metric.eval = c('TSS','ROC'),
-#  var.import = 3,
-#  seed.val = 42)
 

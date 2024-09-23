@@ -28,7 +28,7 @@ for (year_month in year_month_list) {
   month <- year_month[2]
 
   temp_dataset <- tryCatch({
-    create_modeling_dataset(year, month, apply_filter_raster = FALSE)
+    create_modeling_dataset(year, month, apply_filter_raster = TRUE)
   }, error = function(e) {
     cat("Error al procesar year:", year, "month:", month, "\n")
     return(NULL)

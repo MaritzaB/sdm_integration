@@ -30,11 +30,11 @@ create_biomod_data <- function(
     PA.strategy = "sre",
     PA.dist.min = NULL,
     PA.dist.max = NULL,
-    PA.sre.quant = 0.1,
+    PA.sre.quant = 0.5,
     filter.raster = apply_filter_raster,
     na.rm = TRUE
   )
-  
+
   cat("Biomod_data object created with pseudo-absences\n")
   return(biomod_data)
 }
