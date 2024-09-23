@@ -8,7 +8,9 @@ library(sp)
 source("functions/process_raster_data.R")
 source("functions/process_occurrence_data.R")
 
-create_biomod_data <- function(year, month, env, species_occurrence_data) {
+create_biomod_data <- function(
+  year, month, env, species_occurrence_data, apply_filter_raster
+  ) {
   # Obtener las listas de presencia y coordenadas de las especies a partir de
   # los datos de ocurrencia.
   species_presence_data <- species_occurrence_data$presence_data
@@ -29,7 +31,7 @@ create_biomod_data <- function(year, month, env, species_occurrence_data) {
     PA.dist.min = NULL,
     PA.dist.max = NULL,
     PA.sre.quant = 0.1,
-    filter.raster = FALSE,
+    filter.raster = apply_filter_raster,
     na.rm = TRUE
   )
   
@@ -56,12 +58,29 @@ prepare_dataset <- function(biomod_data, year, month) {
   return(presence_absence_dataset)
 }
 
-create_modeling_dataset <- function(year, month) {
-  env <- generate_masked_raster(year, month)
-  species_occurrence_data <- get_occurrence_data(year, month)
-  biomod_data <- create_biomod_data(year, month, env, species_occurrence_data)
-  print(biomod_data)
-  final_dataset <- prepare_dataset(biomod_data, year, month)
-  return(final_dataset)
+balance_presences_absences <- function(data) {
+  presences <- data[data$species_data == 1, ]
+  absences  <- data[data$species_data == 0, ]
+  num_presences <- nrow(presences)
+  if (nrow(absences) < num_presences) {
+    cat("Hay más presencias que ausencias en los datos. No se puede equilibrar correctamente.\n")
+    return(data)
+  }
+  set.seed(1234)
+  sampled_absences <- absences[sample(1:nrow(absences), num_presences), ]
+  balanced_data <- rbind(presences, sampled_absences)
+  
+  return(balanced_data)
 }
 
+create_modeling_dataset <- function(year, month, apply_filter_raster = TRUE) {
+  env <- generate_masked_raster(year, month)
+  species_occurrence_data <- get_occurrence_data(year, month)
+  biomod_data <- create_biomod_data(
+    year, month, env, species_occurrence_data, apply_filter_raster
+    )
+  print(biomod_data)
+  final_dataset <- prepare_dataset(biomod_data, year, month)
+  final_dataset <- balance_presences_absences(final_dataset)
+  return(final_dataset)
+}
