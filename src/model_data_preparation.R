@@ -10,6 +10,7 @@ suppressPackageStartupMessages({
   library(foreach)
   library(mgcv)
   library(nlme)
+  source("functions/modeling_tools.R")
 })
 
 data <- read.csv("model_dataset/full_ml_dataset.csv")
@@ -18,43 +19,36 @@ data <- read.csv("model_dataset/full_ml_dataset.csv")
 train_data <- data %>% filter(nyear >= 2014 & nyear <= 2017)
 test_data  <- data %>% filter(nyear == 2018)
 
-# Calcular proporciones
-total_rows <- nrow(data)
-train_proportion <- nrow(train_data) / total_rows * 100
-test_proportion  <- nrow(test_data) / total_rows * 100
-
-cat("Número de registros en train_data:", nrow(train_data), "(", round(train_proportion, 2), "%)\n")
-cat("Número de registros en test_data:", nrow(test_data), "(", round(test_proportion, 2), "%)\n")
+calculate_proportions(train_data, test_data, column_name = "species_data")
 
 set.seed(24)
 
-# Preparar los datos de entrenamiento y prueba
-species_presence_data_train <- train_data$species_data  # Variable de respuesta para entrenamiento
-environmental_variables_train <- train_data[, c("sst", "chlc", "wind_speed", "wind_direction")]  # Variables explicativas para entrenamiento
-coordinates_train <- train_data[, c("x", "y")]  # Coordenadas de entrenamiento
+species_presence_data_train <- train_data$species_data
+environmental_variables_train <- train_data[, c("sst", "chlc", "wind_speed", "wind_direction")]
+coordinates_train <- train_data[, c("x", "y")]
 
-species_presence_data_test <- test_data$species_data  # Variable de respuesta para prueba
-environmental_variables_test <- test_data[, c("sst", "chlc", "wind_speed", "wind_direction")]  # Variables explicativas para prueba
-coordinates_test <- test_data[, c("x", "y")]  # Coordenadas de prueba
+species_presence_data_test <- test_data$species_data
+environmental_variables_test <- test_data[, c("sst", "chlc", "wind_speed", "wind_direction")]
+coordinates_test <- test_data[, c("x", "y")]
 
 # Crear el objeto BIOMOD_FormatingData con parámetros adicionales
 species_biomod_data <- BIOMOD_FormatingData(
   resp.var = species_presence_data_train,
   expl.var = environmental_variables_train,
   resp.xy = coordinates_train,
-  resp.name = 'NombreDeLaEspecie',  # Cambia a tu especie específica
+  resp.name = 'Proebastria Immutabilis',
   
   eval.resp.var = species_presence_data_test,
   eval.expl.var = environmental_variables_test,
   eval.resp.xy = coordinates_test,
-  
-  PA.nb.rep = 0,          # No se generan pseudo-ausencias
-  PA.nb.absences = NULL,  # Número de pseudo-ausencias
-  PA.strategy = NULL,     # Estrategia de pseudo-ausencias
-  PA.dist.min = NULL,     # Distancia mínima para pseudo-ausencias
-  PA.dist.max = NULL,     # Distancia máxima para pseudo-ausencias
-  PA.sre.quant = NULL,    # Cuantiles para estrategia SRE
-  na.rm = TRUE            # Eliminar NA's
+  #
+  #PA.nb.rep = 0,
+  #PA.nb.absences = NULL,
+  #PA.strategy = NULL,
+  #PA.dist.min = NULL,
+  #PA.dist.max = NULL,
+  #PA.sre.quant = NULL,
+  #na.rm = TRUE 
 )
 
 # Mostrar resumen del objeto creado
@@ -82,14 +76,14 @@ set.seed(24)
 algorithm_rf <- "RF"
 
 
-myBiomodModelOut <- BIOMOD_Modeling(bm.format = species_biomod_data,
-  modeling.id = 'AllModels',
-  models = c('RF', 'GLM'),
-  CV.strategy = 'random',
-  CV.nb.rep = 2,
-  CV.perc = 0.8,
-  OPT.strategy = 'bigboss',
-  metric.eval = c('TSS','ROC'),
-  var.import = 3,
-  seed.val = 42)
+#myBiomodModelOut <- BIOMOD_Modeling(bm.format = species_biomod_data,
+#  modeling.id = 'AllModels',
+#  models = c('RF', 'GLM'),
+#  CV.strategy = 'random',
+#  CV.nb.rep = 2,
+#  CV.perc = 0.8,
+#  OPT.strategy = 'bigboss',
+#  metric.eval = c('TSS','ROC'),
+#  var.import = 3,
+#  seed.val = 42)
 
