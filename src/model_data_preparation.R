@@ -14,11 +14,18 @@ suppressPackageStartupMessages({
 })
 
 data <- read.csv("model_dataset/full_ml_dataset.csv")
-
+unique(data$nmonth)
+data <- subset(data, nmonth %in% c(1, 2))
+head(data)
 # Dividir en train (2014-2017) y test (2018)
 train_data <- data %>% filter(nyear >= 2014 & nyear <= 2017)
-test_data  <- data %>% filter(nyear == 2018)
 
+#Shuffle data
+n_obs <- nrow(train_data)
+train_data <- train_data[sample(n_obs),]
+
+test_data  <- data %>% filter(nyear == 2018)
+ 
 calculate_proportions(train_data, test_data, column_name = "species_data")
 
 set.seed(24)
@@ -47,34 +54,34 @@ species_biomod_data <- BIOMOD_FormatingData(
 
 # Mostrar resumen del objeto creado
 print(species_biomod_data)
-#
-## k-fold selection
-#cv.k <- bm_CrossValidation(
-#  bm.format = species_biomod_data,
-#  strategy = "kfold",
-#  nb.rep = 2,
-#  k = 3
-#)
-#
-
-set.seed(24)
-
-# Definir los algoritmos de clasificación binaria que deseas utilizar
 
 # binary_algorithms <- c("GLM", "RF", "GAM", "GBM")
 binary_algorithms <- c("RF", "GLM")
 
- 
+set.seed(24) 
 myBiomodModelOut <- BIOMOD_Modeling(
   bm.format = species_biomod_data,
-  modeling.id = 'Prueba',
+  modeling.id = "Prueba",
   models = binary_algorithms,
-  CV.strategy = 'random',
-  CV.nb.rep = 2,
-  CV.perc = 0.8,
+  CV.strategy = 'kfold',
+  CV.k = 3,
+  CV.nb.rep = 1,
+  CV.perc = 0.7,
+  CV.do.full.models = TRUE,
   OPT.strategy = 'bigboss',
   metric.eval = c('TSS','ROC', 'ACCURACY'),
   var.import = 3,
   seed.val = 42)
 
-
+#myBiomodEM <- BIOMOD_EnsembleModeling(
+#  bm.mod = myBiomodModelOut,
+#  models.chosen = 'all',
+#  em.by = 'all',
+#  em.algo = c('EMmean', 'EMca'),
+#  metric.select = c('TSS'),
+#  metric.select.thresh = c(0.7),
+#  metric.eval = c('TSS', 'ROC'),
+#  var.import = 3,
+#  seed.val = 42
+#  )
+#

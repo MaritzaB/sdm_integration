@@ -26,9 +26,9 @@ full_ml_dataset <- data.frame()
 for (year_month in year_month_list) {
   year <- year_month[1]
   month <- year_month[2]
-
+  print(paste("Procesando año:", year, "mes:", month))
   temp_dataset <- tryCatch({
-    create_modeling_dataset(year, month, apply_filter_raster = TRUE)
+    create_modeling_dataset(year, month)
   }, error = function(e) {
     cat("Error al procesar year:", year, "month:", month, "\n")
     return(NULL)

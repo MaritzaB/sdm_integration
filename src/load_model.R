@@ -2,7 +2,6 @@ library(biomod2)
 library(dplyr)
 library(tidyverse)
 
-myRespName <- "NombreDeLaEspecie"
 
 file.out <- "Phoebastria.Immutabilis/Phoebastria.Immutabilis.Prueba.models.out"
 print(file.out)
@@ -12,14 +11,14 @@ if (file.exists(file.out)) {
     print(myBiomodModelOut)
 }
 
-
-loadedModel <- BIOMOD_LoadModels(bm.out = myBiomodModelOut)
-
 print("Evaluación del modelo")
 myBiomodModelEval <- get_evaluations(myBiomodModelOut)
 myBiomodModelEval
 
-print("Importancia de variables")
-MyBiomodModelVarImp <- get_variables_importance(myBiomodModelOut)
-MyBiomodModelVarImp
+bm_PlotEvalMean(bm.out = myBiomodModelOut, dataset = 'calibration')
+bm_PlotEvalBoxplot(bm.out = myBiomodModelOut, group.by = c('algo', 'algo'))
+
+#print("Importancia de variables")
+#MyBiomodModelVarImp <- get_variables_importance(myBiomodModelOut)
+#MyBiomodModelVarImp
 
