@@ -12,13 +12,12 @@ suppressPackageStartupMessages({
 
 # Definir la lista de tuplas con año y mes específicos
 year_month_list <- list(
-  c("2014", "01"), c("2014", "02"), c("2014", "03"), c("2014", "04"), c("2014", "05"), c("2014", "12"),
+  c("2014", "01"), c("2014", "02"), c("2014", "03"),
   c("2015", "01"), c("2015", "02"), c("2015", "03"),
-  c("2016", "02"), c("2016", "03"), c("2016", "04"),
+  c("2016", "02"), c("2016", "03"),
   c("2017", "02"), c("2017", "03"),
   c("2018", "01"), c("2018", "02")
 )
-
 
 full_ml_dataset <- data.frame()
 
@@ -46,6 +45,7 @@ if (!dir.exists(output_directory)) {
   dir.create(output_directory, recursive = TRUE)
 }
 
-output_file <- file.path(output_directory, "full_ml_dataset.csv")
+absence_dataset <- "full_absence_dataset.csv"
+output_file <- file.path(output_directory, absence_dataset)
 write.csv(full_ml_dataset, file = output_file, row.names = FALSE)
 cat("Proceso completado. Archivo CSV guardado en:", output_file, "\n")

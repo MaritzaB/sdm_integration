@@ -11,8 +11,6 @@ source("functions/process_occurrence_data.R")
 create_biomod_data <- function(
   year, month, env, species_occurrence_data
   ) {
-  # Obtener las listas de presencia y coordenadas de las especies a partir de
-  # los datos de ocurrencia.
   species_presence_data <- species_occurrence_data$presence_data
   species_coordinates <- species_occurrence_data$coordinates
   studied_species_name <- species_occurrence_data$species_name
@@ -45,20 +43,18 @@ prepare_dataset <- function(biomod_data, year, month) {
   env_vars <- biomod_data@data.env.var
   species_data <- biomod_data@data.species
   species_data[is.na(species_data)] <- 0
-
   presence_absence_dataset <- data.frame(
     coordinates,
     env_vars,
     species_data
-  )
-  
+  ) 
   presence_absence_dataset$nyear <- rep(year, nrow(presence_absence_dataset))
   presence_absence_dataset$nmonth <- rep(month, nrow(presence_absence_dataset))
-  
+  presence_absence_dataset <- presence_absence_dataset[presence_absence_dataset$species_data != 1, ]
   return(presence_absence_dataset)
 }
 
-balance_presences_absences <- function(data, absence_multiplier = 1.2) {
+balance_presences_absences <- function(data, absence_multiplier = 1.5) {
   presences <- data[data$species_data == 1, ]
   absences  <- data[data$species_data == 0, ]
   num_presences <- nrow(presences)
@@ -82,9 +78,6 @@ create_modeling_dataset <- function(year, month) {
     year, month, env, species_occurrence_data
     )
   final_dataset <- prepare_dataset(biomod_data, year, month)
-  final_dataset <- balance_presences_absences(final_dataset)
+  #final_dataset <- balance_presences_absences(final_dataset)
   return(final_dataset)
 }
-
-#ddd <- create_modeling_dataset("2014", "01")
-#print(head(ddd))

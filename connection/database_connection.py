@@ -116,6 +116,7 @@ databases = {
     'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
     'convex_hull': 'connection/db_queries/convex_hull.sql',
     'presence_biomod': 'connection/db_queries/presence_dataset_biomod.sql',
+    'presence_filtered_biomod': 'connection/db_queries/presence_filtered_biomod.sql',
 }
 
 
