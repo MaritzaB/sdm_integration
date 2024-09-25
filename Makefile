@@ -34,8 +34,14 @@ clean:
 	rm -rf model_dataset/
 	clear
 
+clean_models:
+	rm -rf Phoebastria.Immutabilis/
+
 full_clean: clean
 	rm --force -R data/
 
 network:
 	docker network create qgis_devtools_postgis_net
+
+data_model:
+	Rscript src/prepare_full_dataset.R
