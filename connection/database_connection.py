@@ -110,17 +110,17 @@ cur = connection(db_params)
 # Databases to query
 databases = {
     # name of the database: path to the query file
-    'train_incubation': 'connection/db_queries/get_presence_train_incubation_data.sql',
-    'train_brooding': 'connection/db_queries/get_presence_train_brooding_data.sql',
-    'train_chicken_rearing': 'connection/db_queries/get_presence_train_chicken_rearing_data.sql',
-    'test_incubation': 'connection/db_queries/get_presence_test_incubation_data.sql',
-    'test_brooding': 'connection/db_queries/get_presence_test_brooding_data.sql',
-    'test_chicken_rearing': 'connection/db_queries/get_presence_test_chicken_rearing_data.sql',
+    #'train_incubation': 'connection/db_queries/get_presence_train_incubation_data.sql',
+    #'train_brooding': 'connection/db_queries/get_presence_train_brooding_data.sql',
+    #'train_chicken_rearing': 'connection/db_queries/get_presence_train_chicken_rearing_data.sql',
+    #'test_incubation': 'connection/db_queries/get_presence_test_incubation_data.sql',
+    #'test_brooding': 'connection/db_queries/get_presence_test_brooding_data.sql',
+    #'test_chicken_rearing': 'connection/db_queries/get_presence_test_chicken_rearing_data.sql',
     'count_data': 'connection/db_queries/count_data.sql',
     'background_points': 'connection/db_queries/background_points.sql',
     'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
     'convex_hull': 'connection/db_queries/convex_hull.sql',
-    #'presence_biomod': 'connection/db_queries/presence_dataset_biomod.sql',
+    'presence_data': 'connection/db_queries/presence_dataset.sql',
     #'presence_filtered_biomod': 'connection/db_queries/presence_filtered_biomod.sql',
 }
 
