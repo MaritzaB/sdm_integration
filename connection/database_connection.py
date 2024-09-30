@@ -110,8 +110,12 @@ cur = connection(db_params)
 # Databases to query
 databases = {
     # name of the database: path to the query file
-    'train': 'connection/db_queries/get_train_data.sql',
-    'test': 'connection/db_queries/get_test_data.sql',
+    'train_incubation': 'connection/db_queries/get_presence_train_incubation_data.sql',
+    'train_brooding': 'connection/db_queries/get_presence_train_brooding_data.sql',
+    'train_chicken_rearing': 'connection/db_queries/get_presence_train_chicken_rearing_data.sql',
+    'test_incubation': 'connection/db_queries/get_presence_test_incubation_data.sql',
+    'test_brooding': 'connection/db_queries/get_presence_test_brooding_data.sql',
+    'test_chicken_rearing': 'connection/db_queries/get_presence_test_chicken_rearing_data.sql',
     'count_data': 'connection/db_queries/count_data.sql',
     'background_points': 'connection/db_queries/background_points.sql',
     'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
@@ -128,9 +132,9 @@ for db_name, db_file in databases.items():
     df = pd.DataFrame(results, columns=column_names)
     if db_name == 'convex_hull':
         save_results_to_shapefile(df, db_name, directory='data/binary')
-    elif db_name == 'train':
+    elif db_name == 'train_incubation' or db_name == 'train_brooding' or db_name == 'train_chicken_rearing':
         save_results_to_csv(df, db_name, directory='data/train')
-    elif db_name == 'test':
+    elif db_name == 'test_incubation' or db_name == 'test_brooding' or db_name == 'test_chicken_rearing':
         save_results_to_csv(df, db_name, directory='data/test')
     else:
-        save_results_to_csv(df, db_name, directory='data/other')
+        save_results_to_csv(df, db_name, directory='data/others')

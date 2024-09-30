@@ -22,4 +22,4 @@ select * from
   where substring("date", 6, 2) in ('12', '01', '02', '03', '04', '05')
   group by season_ref, nyear, nmonth, latitude, longitude
   order by nyear, nmonth)
-where dataset_type = 'test';
+where dataset_type = 'train' and season_ref = 'crianza';
