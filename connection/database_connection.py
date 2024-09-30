@@ -110,13 +110,14 @@ cur = connection(db_params)
 # Databases to query
 databases = {
     # name of the database: path to the query file
-    'trajectories': 'connection/db_queries/query_elapid.sql',
+    'train': 'connection/db_queries/get_train_data.sql',
+    'test': 'connection/db_queries/get_test_data.sql',
     'count_data': 'connection/db_queries/count_data.sql',
     'background_points': 'connection/db_queries/background_points.sql',
     'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
     'convex_hull': 'connection/db_queries/convex_hull.sql',
-    'presence_biomod': 'connection/db_queries/presence_dataset_biomod.sql',
-    'presence_filtered_biomod': 'connection/db_queries/presence_filtered_biomod.sql',
+    #'presence_biomod': 'connection/db_queries/presence_dataset_biomod.sql',
+    #'presence_filtered_biomod': 'connection/db_queries/presence_filtered_biomod.sql',
 }
 
 
@@ -127,5 +128,9 @@ for db_name, db_file in databases.items():
     df = pd.DataFrame(results, columns=column_names)
     if db_name == 'convex_hull':
         save_results_to_shapefile(df, db_name, directory='data/binary')
+    elif db_name == 'train':
+        save_results_to_csv(df, db_name, directory='data/train')
+    elif db_name == 'test':
+        save_results_to_csv(df, db_name, directory='data/test')
     else:
-        save_results_to_csv(df, db_name, directory='data')
+        save_results_to_csv(df, db_name, directory='data/other')

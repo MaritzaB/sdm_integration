@@ -1,4 +1,6 @@
-select
+select * from
+(
+  select
     case 
         when substring("date",6,2) = '12' or substring("date", 6, 2) = '01' then 'incubacion'
         when substring("date",6,2) = '02' then 'empollamiento'
@@ -16,7 +18,8 @@ select
              substring("date",1,4) = '2017' then 'test'
         else 'train'
     end as dataset_type
-from albatros_seasons as2
-where substring("date", 6, 2) in ('12', '01', '02', '03', '04', '05')
-group by season_ref, nyear, nmonth, latitude, longitude
-order by nyear, nmonth;
+  from albatros_seasons as2
+  where substring("date", 6, 2) in ('12', '01', '02', '03', '04', '05')
+  group by season_ref, nyear, nmonth, latitude, longitude
+  order by nyear, nmonth)
+where dataset_type = 'test';
