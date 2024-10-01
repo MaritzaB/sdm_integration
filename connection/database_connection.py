@@ -28,7 +28,7 @@ def read_query_from_file(db_file):
     return query
 
 
-def execute_query(cur, query):
+def execute_query(cur, query, values = None):
     """
     Ejecuta una consulta SQL en la base de datos.
 
@@ -40,7 +40,7 @@ def execute_query(cur, query):
     - results: Los resultados de la consulta.
     - column_names: Los nombres de las columnas.
     """
-    cur.execute(query)
+    cur.execute(query, values)
     results = cur.fetchall()
     column_names = [desc[0] for desc in cur.description]
     return results, column_names
@@ -110,12 +110,7 @@ cur = connection(db_params)
 # Databases to query
 databases = {
     # name of the database: path to the query file
-    #'train_incubation': 'connection/db_queries/get_presence_train_incubation_data.sql',
-    #'train_brooding': 'connection/db_queries/get_presence_train_brooding_data.sql',
-    #'train_chicken_rearing': 'connection/db_queries/get_presence_train_chicken_rearing_data.sql',
-    #'test_incubation': 'connection/db_queries/get_presence_test_incubation_data.sql',
-    #'test_brooding': 'connection/db_queries/get_presence_test_brooding_data.sql',
-    #'test_chicken_rearing': 'connection/db_queries/get_presence_test_chicken_rearing_data.sql',
+    'split_train_test': 'connection/db_queries/get_splitted_data_into_train_test.sql',
     'count_data': 'connection/db_queries/count_data.sql',
     'background_points': 'connection/db_queries/background_points.sql',
     'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
@@ -124,17 +119,34 @@ databases = {
     #'presence_filtered_biomod': 'connection/db_queries/presence_filtered_biomod.sql',
 }
 
+values_train = [
+    ('train', 'incubacion'),
+    ('train', 'empollamiento'),
+    ('train', 'crianza'),
+    ('test', 'incubacion'),
+    ('test', 'empollamiento'),
+    ('test', 'crianza'),
+]
 
-# Execute the queries and save the results to CSV
+
 for db_name, db_file in databases.items():
     query = read_query_from_file(db_file)
-    results, column_names = execute_query(cur, query)
-    df = pd.DataFrame(results, columns=column_names)
-    if db_name == 'convex_hull':
+    
+    # Si el nombre de la base de datos es 'split_train_test', ejecutar la
+    # consulta con diferentes valores
+    if db_name == 'split_train_test':
+        for value_pair in values_train:
+            results, column_names = execute_query(cur, query, values=value_pair)
+            df = pd.DataFrame(results, columns=column_names)
+            save_results_to_csv(df, f"{value_pair[0]}_{value_pair[1]}", 
+                                directory=f'model_dataset_4vars/{value_pair[0]}')
+    
+    elif db_name == 'convex_hull':
+        results, column_names = execute_query(cur, query)
+        df = pd.DataFrame(results, columns=column_names)
         save_results_to_shapefile(df, db_name, directory='data/binary')
-    elif db_name == 'train_incubation' or db_name == 'train_brooding' or db_name == 'train_chicken_rearing':
-        save_results_to_csv(df, db_name, directory='data/train')
-    elif db_name == 'test_incubation' or db_name == 'test_brooding' or db_name == 'test_chicken_rearing':
-        save_results_to_csv(df, db_name, directory='data/test')
+    
     else:
+        results, column_names = execute_query(cur, query)
+        df = pd.DataFrame(results, columns=column_names)
         save_results_to_csv(df, db_name, directory='data/others')
