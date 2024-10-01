@@ -3,7 +3,7 @@ suppressPackageStartupMessages({
   source("functions/generate_pseudo_absences.R")
 })
 
-plot_raster_with_points <- function(raster, df, output_file) {
+plot_raster_with_points <- function(raster, df, output_file, year, month) {
 
   png(filename = output_file, width = 800, height = 600)
   
@@ -29,5 +29,5 @@ plot_species_distribution <- function(raster_file, df) {
   }
 
   output_file <- file.path(output_directory, paste0("presencias_ausencias_", year, "_", month, ".png"))
-  plot_raster_with_points(raster_file, df, output_file)
+  plot_raster_with_points(raster_file, df, output_file, year, month)
 }

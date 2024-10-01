@@ -33,7 +33,7 @@ crop_and_mask_raster <- function(env_stack, polygon, raster_names) {
 
 # Función para generar el ráster recortado y enmascarado
 generate_masked_raster <- function(year, month) {
-  raster_dir <- file.path("resampled_data", year, month)
+  raster_dir <- file.path("resampled_data_4vars", year, month)
   
   rasters <- c(
     sst = "sst_resampled.tif",
