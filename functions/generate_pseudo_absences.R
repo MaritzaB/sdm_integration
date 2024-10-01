@@ -36,7 +36,7 @@ create_biomod_data <- function(env, species_occurrence_data) {
 }
 
 
-prepare_dataset <- function(biomod_data, year, month, mode = "absence") {
+prepare_dataset <- function(biomod_data, year, month, mode = "presence") {
   coordinates <- as.matrix(biomod_data@coord)
   env_vars <- biomod_data@data.env.var
   species_data <- biomod_data@data.species
@@ -74,13 +74,13 @@ balance_presences_absences <- function(data, absence_multiplier = 1.5) {
   return(balanced_data)
 }
 
-create_modeling_dataset <- function(year, month) {
+create_modeling_dataset <- function(year, month, mode, occurrences_file) {
+  mode <- match.arg(mode, c("presence", "absence"))
   env <- generate_masked_raster(year, month)
-  species_occurrence_data <- get_occurrence_data(year, month)
+  species_occurrence_data <- get_occurrence_data(year, month, mode, occurrences_file)
   biomod_data <- create_biomod_data(
     env, species_occurrence_data
     )
-  final_dataset <- prepare_dataset(biomod_data, year, month)
-  #final_dataset <- balance_presences_absences(final_dataset)
+  final_dataset <- prepare_dataset(biomod_data, year, month, mode)
   return(final_dataset)
 }
