@@ -1,4 +1,4 @@
-.PHONY: connection disconnection clean tests network
+.PHONY: connection disconnection clean tests network absence_4var_extraction
 
 build:
 	docker compose build
@@ -31,7 +31,8 @@ disconnection:
 
 clean:
 	rm -rf maps/
-	rm -rf model_dataset/
+	rm -rf model_dataset_2vars/
+	rm -rf model_dataset_4vars/
 	clear
 
 clean_models:
@@ -39,13 +40,20 @@ clean_models:
 
 full_clean: clean
 	rm --force -R data/
+	rm -rf presence_data_2v/
+	rm -rf presence_data_4v/
 
 network:
 	docker network create qgis_devtools_postgis_net
 
-# Si queremos hacer la extracción de todas las variables o solo de 2 variables,
-# debemos de indicarlo dentro del script de R, modificando la variable
-# number_of_variables <- 2 (sst y chlc) o number_of_variables <- 4 (sst, chlc,
-# wind_speed y wind_direction)
-presence_var_extraction:
-	Rscript src/prepare_full_dataset.R "presence"
+presence_2var_extraction:
+	Rscript src/prepare_full_dataset.R "presence" 2
+
+presence_4var_extraction:
+	Rscript src/prepare_full_dataset.R "presence" 4
+
+absence_2var_extraction:
+	Rscript src/prepare_full_dataset.R "absence" 2
+
+absence_4var_extraction:
+	Rscript src/prepare_full_dataset.R "absence" 4

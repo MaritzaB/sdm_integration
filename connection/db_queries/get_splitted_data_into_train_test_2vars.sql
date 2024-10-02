@@ -1,9 +1,9 @@
 select
-  nyear,
-  LPAD(nmonth::text, 2, '0')::text AS nmonth,
-  sst, chlc,
   longitude, latitude,
-  Phoebastria_immutabilis
+  sst, chlc,
+  Phoebastria_immutabilis,
+  nyear,
+  LPAD(nmonth::text, 2, '0')::text AS nmonth
 from
 ( select
     sst, chlc,
