@@ -110,7 +110,8 @@ cur = connection(db_params)
 # Databases to query
 databases = {
     # name of the database: path to the query file
-    'split_train_test': 'connection/db_queries/get_splitted_data_into_train_test.sql',
+    'split_train_test_2v': 'connection/db_queries/get_splitted_data_into_train_test_2vars.sql',
+    'split_train_test_4v': 'connection/db_queries/get_splitted_data_into_train_test_4vars.sql',
     'count_data': 'connection/db_queries/count_data.sql',
     'background_points': 'connection/db_queries/background_points.sql',
     'americas_shapefile': 'connection/db_queries/americas_shapefile.sql',
@@ -134,12 +135,19 @@ for db_name, db_file in databases.items():
     
     # Si el nombre de la base de datos es 'split_train_test', ejecutar la
     # consulta con diferentes valores
-    if db_name == 'split_train_test':
+    if db_name == 'split_train_test_4v':
         for value_pair in values_train:
             results, column_names = execute_query(cur, query, values=value_pair)
             df = pd.DataFrame(results, columns=column_names)
             save_results_to_csv(df, f"{value_pair[0]}_{value_pair[1]}", 
-                                directory=f'model_dataset_4vars/{value_pair[0]}')
+                                directory=f'presence_data_4v/{value_pair[0]}')
+    
+    elif db_name == 'split_train_test_2v':
+        for value_pair in values_train:
+            results, column_names = execute_query(cur, query, values=value_pair)
+            df = pd.DataFrame(results, columns=column_names)
+            save_results_to_csv(df, f"{value_pair[0]}_{value_pair[1]}", 
+                                directory=f'presence_data_2v/{value_pair[0]}')
     
     elif db_name == 'convex_hull':
         results, column_names = execute_query(cur, query)
