@@ -74,13 +74,51 @@ balance_presences_absences <- function(data, absence_multiplier = 1.5) {
   return(balanced_data)
 }
 
-create_modeling_dataset <- function(year, month, mode, occurrences_file) {
+create_modeling_dataset <- function(year, month, mode, occurrences_file, n_vars) {
   mode <- match.arg(mode, c("presence", "absence"))
-  env <- generate_masked_raster(year, month)
+  env <- generate_masked_raster(year, month, n_vars)
   species_occurrence_data <- get_occurrence_data(year, month, mode, occurrences_file)
   biomod_data <- create_biomod_data(
     env, species_occurrence_data
     )
   final_dataset <- prepare_dataset(biomod_data, year, month, mode)
   return(final_dataset)
+}
+
+generate_full_ml_dataset <- function(
+  type_of_dataset, input_data, 
+  year_month_list, output_directory, n_vars
+  ) {
+  n_variables <- n_vars
+  full_ml_dataset <- data.frame()
+  for (year_month in year_month_list) {
+    year <- year_month[1]
+    month <- year_month[2]
+    print(paste("Procesando año:", year, "mes:", month))
+    
+    temp_dataset <- tryCatch({
+      create_modeling_dataset(year, month, type_of_dataset, input_data, n_variables)
+    }, error = function(e) {
+      cat("Error al procesar year:", year, "month:", month, "\n")
+      return(NULL)
+    })
+    
+    raster_file <- generate_masked_raster(year, month, n_variables)
+    plot_species_distribution(raster_file, temp_dataset)
+    
+    if (!is.null(temp_dataset)) {
+      full_ml_dataset <- rbind(full_ml_dataset, temp_dataset)
+    }
+  }
+
+  if (!dir.exists(output_directory)) {
+    dir.create(output_directory, recursive = TRUE)
+  }
+
+  output_file <- file.path(
+    output_directory, 
+    paste0(type_of_dataset, "_dataset.csv")
+    )
+  write.csv(full_ml_dataset, file = output_file, row.names = FALSE)
+  cat("Proceso completado. Archivo CSV guardado en:", output_file, "\n")
 }

@@ -32,19 +32,30 @@ crop_and_mask_raster <- function(env_stack, polygon, raster_names) {
 }
 
 # Función para generar el ráster recortado y enmascarado
-generate_masked_raster <- function(year, month) {
-  raster_dir <- file.path("resampled_data_4vars", year, month)
-  
-  rasters <- c(
-    sst = "sst_resampled.tif",
-    chlc = "chlor_a_resampled.tif",
-    wind_speed = "wind_speed.tif",
-    wind_direction = "wind_direction.tif"
-  )
+generate_masked_raster <- function(year, month, n_vars) {
+  # Cambiar el directorio y seleccionar las variables según el número de variables
+  if (n_vars == 2) {
+    raster_dir <- file.path("resampled_data_2vars", year, month)
+    rasters <- c(
+      sst = "sst_resampled.tif",
+      chlc = "chlor_a_resampled.tif"
+    )
+  } else if (n_vars == 4) {
+    raster_dir <- file.path("resampled_data_4vars", year, month)
+    rasters <- c(
+      sst = "sst_resampled.tif",
+      chlc = "chlor_a_resampled.tif",
+      wind_speed = "wind_speed.tif",
+      wind_direction = "wind_direction.tif"
+    )
+  } else {
+    stop("El número de variables no es válido. Debe ser 2 o 4.")
+  }
 
   polygon <- load_polygon()
   
   env_stack <- create_raster_stack(raster_dir, rasters)
   masked_raster <- crop_and_mask_raster(env_stack, polygon, names(rasters))
+  
   return(masked_raster)
 }

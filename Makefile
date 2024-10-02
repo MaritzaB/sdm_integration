@@ -43,5 +43,9 @@ full_clean: clean
 network:
 	docker network create qgis_devtools_postgis_net
 
-data_model:
-	Rscript src/prepare_full_dataset.R
+# Si queremos hacer la extracción de todas las variables o solo de 2 variables,
+# debemos de indicarlo dentro del script de R, modificando la variable
+# number_of_variables <- 2 (sst y chlc) o number_of_variables <- 4 (sst, chlc,
+# wind_speed y wind_direction)
+presence_var_extraction:
+	Rscript src/prepare_full_dataset.R "presence"

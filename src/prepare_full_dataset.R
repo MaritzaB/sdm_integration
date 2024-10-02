@@ -10,43 +10,6 @@ suppressPackageStartupMessages({
   source("functions/plot_presence_absence.R")
 })
 
-generate_full_ml_dataset <- function(
-  type_of_dataset, input_data, year_month_list, output_directory = "model_dataset") {
-  full_ml_dataset <- data.frame()
-
-  # Iterar sobre la lista de tuplas para generar el dataset completo
-  for (year_month in year_month_list) {
-    year <- year_month[1]
-    month <- year_month[2]
-    print(paste("Procesando año:", year, "mes:", month))
-    
-    temp_dataset <- tryCatch({
-      create_modeling_dataset(year, month, type_of_dataset, input_data)
-    }, error = function(e) {
-      cat("Error al procesar year:", year, "month:", month, "\n")
-      return(NULL)
-    })
-    
-    raster_file <- generate_masked_raster(year, month)
-    plot_species_distribution(raster_file, temp_dataset)
-    
-    if (!is.null(temp_dataset)) {
-      full_ml_dataset <- rbind(full_ml_dataset, temp_dataset)
-    }
-  }
-
-  # Crear el directorio de salida si no existe
-  if (!dir.exists(output_directory)) {
-    dir.create(output_directory, recursive = TRUE)
-  }
-
-  # Definir el archivo de salida y guardar el dataset
-  output_file <- file.path(output_directory, paste0(type_of_dataset, "_dataset.csv"))
-  write.csv(full_ml_dataset, file = output_file, row.names = FALSE)
-  
-  cat("Proceso completado. Archivo CSV guardado en:", output_file, "\n")
-}
-
 # Definir la lista de tuplas con año y mes específicos
 # Ahorita estamos generando pseudoausencias para los meses a predecir
 year_month_list <- list(
@@ -59,13 +22,26 @@ year_month_list <- list(
 
 # Si vamos a extraer solo las variables de presencia, entonces el archivo de
 # entrada es el de presencia
-input_data <- "data/others/presence_data.csv"
 # Si vamos a generar pseudo-ausencias, entonces los archivos de entrada van a
 # ser los de presencia ya filtrados por temporada reproductiva y por tipo de
 # datos (entrenamiento o prueba). Por lo que generaremos una lista de archivos.
-type_of_dataset <- "presence"
+args <- commandArgs(trailingOnly = TRUE)
+type_of_dataset <- args[1]
+number_of_variables <- 2
 
-generate_full_ml_dataset(type_of_dataset, input_data, year_month_list)
+if (number_of_variables == 4) {
+  out_dir <- "model_dataset_4vars"
+} else if (number_of_variables == 2) {
+  out_dir <- "model_dataset_2vars"
+} else {
+  stop("El número de variables no es válido. Debe ser 2 o 4.")
+}
+
+input_data <- "data/others/presence_data.csv"
+generate_full_ml_dataset(
+  type_of_dataset, input_data, 
+  year_month_list, out_dir, number_of_variables)
+
 
 databases <- list(
   # nombre de la base de datos: ruta al archivo de consulta
