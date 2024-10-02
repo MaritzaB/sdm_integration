@@ -52,17 +52,17 @@ databases <- list(
   # nombre de la base de datos: ruta al archivo de consulta
   all_presences = list(archivo = "data/others/presence_data.csv",
                        season = year_month_list),
-  train_incubacion = list(archivo = 'train/train_incubacion.csv', 
+  train_incubacion = list(archivo = 'train_incubacion.csv', 
                           season = year_month_train_incubacion),
-  train_empollamiento = list(archivo = 'train/train_empollamiento.csv',
+  train_empollamiento = list(archivo = 'train_empollamiento.csv',
                              season = year_month_train_empollamiento),
-  train_crianza = list(archivo = 'train/train_crianza.csv',
+  train_crianza = list(archivo = 'train_crianza.csv',
                        season = year_month_train_crianza),
-  test_incubacion = list(archivo = 'test/test_incubacion.csv', 
+  test_incubacion = list(archivo = 'test_incubacion.csv', 
                          season = year_month_test_incubacion),
-  test_empollamiento = list(archivo = 'test/test_empollamiento.csv', 
+  test_empollamiento = list(archivo = 'test_empollamiento.csv', 
                             season = year_month_test_empollamiento),
-  test_crianza = list(archivo = 'test/test_crianza.csv', 
+  test_crianza = list(archivo = 'test_crianza.csv', 
                       season = year_month_test_crianza)
 )
 
