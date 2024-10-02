@@ -37,6 +37,7 @@ create_biomod_data <- function(env, species_occurrence_data) {
 
 
 prepare_dataset <- function(biomod_data, year, month, mode = "presence") {
+  #mode <- "plot"  # Descomentar para visualizar el dataset completo
   coordinates <- as.matrix(biomod_data@coord)
   env_vars <- biomod_data@data.env.var
   species_data <- biomod_data@data.species
@@ -53,25 +54,11 @@ prepare_dataset <- function(biomod_data, year, month, mode = "presence") {
     presence_absence_dataset <- presence_absence_dataset[presence_absence_dataset$species_data == 1, ]
   } else if (mode == "absence") {
     presence_absence_dataset <- presence_absence_dataset[presence_absence_dataset$species_data == 0, ]
-  } 
-  return(presence_absence_dataset)
-}
-
-balance_presences_absences <- function(data, absence_multiplier = 1.5) {
-  presences <- data[data$species_data == 1, ]
-  absences  <- data[data$species_data == 0, ]
-  num_presences <- nrow(presences)
-  num_absences_to_sample <- ceiling(num_presences * absence_multiplier)
-  
-  if (nrow(absences) < num_absences_to_sample) {
-    cat("Hay más presencias que ausencias en los datos. No se puede equilibrar correctamente.\n")
-    return(data)
+  } else if (mode == "plot") {
+    # No se aplica ningún filtro, se devuelve el dataset completo
+    presence_absence_dataset <- presence_absence_dataset
   }
-  set.seed(1234)
-
-  sampled_absences <- absences[sample(1:nrow(absences), num_absences_to_sample), ]
-  balanced_data <- rbind(presences, sampled_absences)
-  return(balanced_data)
+  return(presence_absence_dataset)
 }
 
 create_modeling_dataset <- function(year, month, mode, occurrences_file, n_vars) {

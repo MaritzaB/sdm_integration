@@ -1,0 +1,12 @@
+data/*
+resampled_data/*/*/*
+resampled_data_2vars/*/*/*
+resampled_data_4vars/*/*/*
+maps/*
+maps_2vars/*
+maps_4vars/*
+model_dataset/*
+model_dataset_4vars/*
+model_dataset_2vars/*
+presence_data_2v/*
+presence_data_4v/*

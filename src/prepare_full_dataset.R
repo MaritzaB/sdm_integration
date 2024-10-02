@@ -68,7 +68,7 @@ databases <- list(
 
 args <- commandArgs(trailingOnly = TRUE)
 type_of_dataset <- args[1]
-number_of_variables <- 4
+number_of_variables <- as.numeric(args[2])
 
 if (number_of_variables == 4) {
   out_dir <- "model_dataset_4vars"
