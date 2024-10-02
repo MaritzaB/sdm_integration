@@ -87,7 +87,7 @@ create_modeling_dataset <- function(year, month, mode, occurrences_file, n_vars)
 
 generate_full_ml_dataset <- function(
   type_of_dataset, input_data, 
-  year_month_list, output_directory, n_vars
+  year_month_list, output_file, n_vars
   ) {
   n_variables <- n_vars
   full_ml_dataset <- data.frame()
@@ -111,14 +111,7 @@ generate_full_ml_dataset <- function(
     }
   }
 
-  if (!dir.exists(output_directory)) {
-    dir.create(output_directory, recursive = TRUE)
-  }
-
-  output_file <- file.path(
-    output_directory, 
-    paste0(type_of_dataset, "_dataset.csv")
-    )
-  write.csv(full_ml_dataset, file = output_file, row.names = FALSE)
+  out_file <- output_file
+  write.csv(full_ml_dataset, file = out_file, row.names = FALSE)
   cat("Proceso completado. Archivo CSV guardado en:", output_file, "\n")
 }
