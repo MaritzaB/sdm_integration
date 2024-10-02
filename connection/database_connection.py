@@ -140,14 +140,14 @@ for db_name, db_file in databases.items():
             results, column_names = execute_query(cur, query, values=value_pair)
             df = pd.DataFrame(results, columns=column_names)
             save_results_to_csv(df, f"{value_pair[0]}_{value_pair[1]}", 
-                                directory=f'presence_data_4v/{value_pair[0]}')
+                                directory=f'presence_data_4v')
     
     elif db_name == 'split_train_test_2v':
         for value_pair in values_train:
             results, column_names = execute_query(cur, query, values=value_pair)
             df = pd.DataFrame(results, columns=column_names)
             save_results_to_csv(df, f"{value_pair[0]}_{value_pair[1]}", 
-                                directory=f'presence_data_2v/{value_pair[0]}')
+                                directory=f'presence_data_2v')
     
     elif db_name == 'convex_hull':
         results, column_names = execute_query(cur, query)
