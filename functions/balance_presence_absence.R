@@ -19,9 +19,10 @@ get_data_directories <- function(number_of_variables) {
 rename_absence_columns <- function(absence_data) {
   absence_data <- absence_data %>%
     rename(
-      longitude = x,   # Cambiar 'x' a 'longitude'
-      latitude = y,    # Cambiar 'y' a 'latitude'
-      phoebastria_immutabilis = species_data  # Cambiar 'species_data' a 'phoebastria_immutabilis'
+      longitude = x,   # Cambiar col 'x' a 'longitude'
+      latitude = y,    # Cambiar col 'y' a 'latitude'
+       # Cambiar col 'species_data' a 'phoebastria_immutabilis'
+      phoebastria_immutabilis = species_data
     )
   return(absence_data)
 }
@@ -66,9 +67,9 @@ balance_data_by_month_year <- function(presences_data, absences_data, sample_rat
   unique_year_months <- presences_data %>%
     select(nyear, nmonth) %>%
     distinct()
-  
+
   final_dataset <- data.frame()
-  
+
   for (i in 1:nrow(unique_year_months)) {
     year <- unique_year_months$nyear[i]
     month <- unique_year_months$nmonth[i]

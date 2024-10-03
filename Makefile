@@ -33,6 +33,8 @@ clean:
 	rm -rf maps/
 	rm -rf model_dataset_2vars/
 	rm -rf model_dataset_4vars/
+	rm -rf presence_absence_2vars/
+	rm -rf presence_absence_4vars/
 	clear
 
 clean_models:
@@ -57,3 +59,9 @@ absence_2var_extraction:
 
 absence_4var_extraction:
 	Rscript src/prepare_full_dataset.R "absence" 4
+
+presence_absence_2vars: absence_2var_extraction
+	Rscript src/join_presence_absence.R 2
+
+presence_absence_4vars: absence_4var_extraction
+	Rscript src/join_presence_absence.R 4

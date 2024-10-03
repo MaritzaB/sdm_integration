@@ -6,8 +6,9 @@ maps/*
 maps_2vars/*
 maps_4vars/*
 model_dataset/*
-model_dataset_4vars/*
 model_dataset_2vars/*
+model_dataset_4vars/*
 presence_data_2v/*
 presence_data_4v/*
-presence_absence/*
+presence_absence_2vars/*
+presence_absence_4vars/*

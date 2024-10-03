@@ -30,12 +30,13 @@ presence_absence_files <- list(
     )
 )
 
-n_vars <- 4
+args <- commandArgs(trailingOnly = TRUE)
+n_vars <- as.numeric(args[1])
 dirs <- get_data_directories(n_vars)
 
 absence_dir <- dirs$absence_dir
 presence_dir <- dirs$presence_dir
-out_dir <- "presence_absence/"
+out_dir <- paste0("presence_absence_", n_vars, "vars/")
 
 if (!dir.exists(out_dir)) {
   dir.create(out_dir, recursive = TRUE)
