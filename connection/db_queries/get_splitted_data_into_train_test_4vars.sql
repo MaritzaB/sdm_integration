@@ -6,7 +6,7 @@ select
   LPAD(nmonth::text, 2, '0')::text AS nmonth
 from
 ( select
-    sst, chlc, wind_speed, wind_direction,
+    sst, LOG(chlc) as chlc, wind_speed, wind_direction,
     case 
         when nmonth = 12 or nmonth = 1 then 'incubacion'
         when nmonth = 2 then 'empollamiento'

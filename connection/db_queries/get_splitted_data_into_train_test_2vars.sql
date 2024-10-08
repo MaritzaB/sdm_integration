@@ -6,7 +6,7 @@ select
   LPAD(nmonth::text, 2, '0')::text AS nmonth
 from
 ( select
-    sst, chlc,
+    sst, LOG(chlc) as chlc,
     case 
         when nmonth = 12 or nmonth = 1 then 'incubacion'
         when nmonth = 2 then 'empollamiento'
