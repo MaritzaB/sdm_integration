@@ -17,7 +17,13 @@ load_polygon <- function() {
 # Función para crear el stack de rásteres
 create_raster_stack <- function(raster_dir, rasters) {
   loaded_rasters <- lapply(
-    rasters, function(raster_file) load_raster(raster_dir, raster_file)
+    rasters, function(raster_file) {
+      raster_layer <- load_raster(raster_dir, raster_file)
+      if (grepl("chlor_a", raster_file, ignore.case = TRUE)) {
+        raster_layer <- log(raster_layer)
+      }
+      return(raster_layer)
+    }
     )
   env_stack <- rast(loaded_rasters)
   return(env_stack)
