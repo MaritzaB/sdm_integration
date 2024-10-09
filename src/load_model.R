@@ -1,10 +1,12 @@
 library(biomod2)
 library(dplyr)
 library(tidyverse)
+library(ggplot2)
 source("functions/create_biomod_data_object.R")
+source("functions/process_raster_data.R")
 
 file.out <- "Phoebastria.Immutabilis/Phoebastria.Immutabilis.incubacion.models.out"
-#sink("OutputBiomodModel.txt")
+
 print(file.out)
 if (file.exists(file.out)) {
     myBiomodModelOut <- get(load(file.out))
@@ -15,39 +17,55 @@ if (file.exists(file.out)) {
 
 print("Evaluación del modelo")
 myBiomodModelEval <- get_evaluations(myBiomodModelOut)
-myBiomodModelEval
+#myBiomodModelEval
+season <- 'incubacion'
+out_dir <- paste0("figures/", season, "/")
+if (!dir.exists(out_dir)) {
+  dir.create(out_dir, recursive = TRUE)
+}
 
-
-bm_PlotEvalMean(bm.out = myBiomodModelOut, dataset = 'calibration')
-bm_PlotEvalMean(bm.out = myBiomodModelOut, dataset = 'evaluation')
-
-#bm_PlotEvalBoxplot(bm.out = myBiomodModelOut, group.by = c('algo', 'run'), dataset = 'calibration')
-#bm_PlotEvalBoxplot(bm.out = myBiomodModelOut, group.by = c('algo', 'run'), dataset = 'evaluation')
-bm_PlotEvalBoxplot(bm.out = myBiomodModelOut, group.by = c('algo', 'algo'), dataset = 'calibration')
-bm_PlotEvalBoxplot(bm.out = myBiomodModelOut, group.by = c('algo', 'algo'), dataset = 'evaluation')
-
-n_runs <- c("RUN1", "RUN2", "RUN3", "RUN4", "RUN5", "RUN6", "RUN7", "RUN8", "RUN9", "RUN10")
-mods <- get_built_models(myBiomodModelOut, run = n_runs)
-bm_PlotResponseCurves(
+training_boxplot <- bm_PlotEvalBoxplot(
+    bm.out = myBiomodModelOut, 
+    group.by = c('algo', 'algo'), 
+    dataset = 'calibration', 
+    do.plot = FALSE)
+testing_boxplot <- bm_PlotEvalBoxplot(
     bm.out = myBiomodModelOut,
-    models.chosen = mods,
-    fixed.var = 'median')
-bm_PlotResponseCurves(
-    bm.out = myBiomodModelOut,
-    models.chosen = mods,
-    fixed.var = 'min')
+    group.by = c('algo', 'algo'),
+    dataset = 'evaluation',
+    do.plot = FALSE)
 
-#mods <- get_built_models(
-#    myBiomodModelOut,
-#    full.name = 'LAAL_RUN2_RF')
-#bm_PlotResponseCurves(
-#    bm.out = myBiomodModelOut,
-#    models.chosen = mods,
-#    fixed.var = 'median',
-#    do.bivariate = TRUE)
+training_boxplot_gg <- training_boxplot$plot
+training_boxplot <- training_boxplot_gg + 
+    ggtitle("Evaluación del Modelo - Conjunto de entrenamiento") +
+    xlab("Método de clasificación") +
+    ylab("Valor de la métrica de evaluación") +
+    theme(plot.title = element_text(hjust = 0.5))
+training_boxplot_filename <- paste0(out_dir, "boxplot_evaluacion_trainingSet.png")
+ggsave(filename = training_boxplot_filename, plot = training_boxplot, width = 8, height = 6)
 
-#print("Importancia de variables")
-#MyBiomodModelVarImp <- get_variables_importance(myBiomodModelOut)
-#MyBiomodModelVarImp
-#sink()
+testing_boxplot_gg <- testing_boxplot$plot
+testing_boxplot <- testing_boxplot_gg + 
+    ggtitle("Evaluación del Modelo - Conjunto de prueba") +
+    xlab("Método de clasificación") +
+    ylab("Valor de la métrica de evaluación") +
+    theme(plot.title = element_text(hjust = 0.5))
+testing_boxplot_filename <- paste0(out_dir, "boxplot_evaluacion_testingSet.png")
+ggsave(filename = testing_boxplot_filename, plot = testing_boxplot, width = 8, height = 6)
 
+print("Importancia de variables")
+MyBiomodModelVarImp <- get_variables_importance(myBiomodModelOut)
+df <- MyBiomodModelVarImp[,3:ncol(MyBiomodModelVarImp)]
+avg_var_importance <- df %>%
+  group_by(algo, expl.var) %>%
+  summarize(mean_importance = mean(var.imp), .groups = 'drop')
+
+plot_var_importance <- ggplot(avg_var_importance, aes(x = reorder(expl.var, mean_importance), y = mean_importance, fill = algo)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  coord_flip() +
+  labs(title = "Importancia Promedio de las Variables por Algoritmo",
+       x = "Variable",
+       y = "Importancia Promedio") +
+  theme(plot.title = element_text(hjust = 0.5))
+plot_var_importance_filename <- paste0(out_dir, "importancia_variables.png")
+ggsave(filename = plot_var_importance_filename, plot = plot_var_importance, width = 10, height = 6)
