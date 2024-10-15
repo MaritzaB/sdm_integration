@@ -35,6 +35,7 @@ clean:
 	rm -rf model_dataset_4vars/
 	rm -rf presence_absence_2vars/
 	rm -rf presence_absence_4vars/
+	rm -rf figures/
 	clear
 
 clean_models:

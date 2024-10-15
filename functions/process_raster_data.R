@@ -19,7 +19,7 @@ create_raster_stack <- function(raster_dir, rasters) {
   loaded_rasters <- lapply(
     rasters, function(raster_file) {
       raster_layer <- load_raster(raster_dir, raster_file)
-      if (grepl("chlor_a", raster_file, ignore.case = TRUE)) {
+      if (grepl("mdh", raster_file, ignore.case = TRUE)) {
         raster_layer <- log(raster_layer)
       }
       return(raster_layer)
@@ -65,3 +65,7 @@ generate_masked_raster <- function(year, month, n_vars) {
   
   return(masked_raster)
 }
+
+# Write raster to disk
+env <- generate_masked_raster('2018', '01', 4)
+writeRaster(env, "env.tif", overwrite = TRUE)
