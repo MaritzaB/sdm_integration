@@ -34,7 +34,8 @@ filter_by_year_month <- function(data, year, month) {
 }
 
 # Función para tomar una muestra balanceada de ausencias
-sample_absences <- function(absences_data, num_presences, sample_ratio = 1.2) {
+sample_absences <- function(absences_data, num_presences, sample_ratio) {
+  set.seed(235)
   sample_size <- ceiling(num_presences * sample_ratio)
   num_absences <- nrow(absences_data)
   
@@ -49,7 +50,7 @@ sample_absences <- function(absences_data, num_presences, sample_ratio = 1.2) {
 }
 
 # Función para balancear los datos por año y mes
-balance_data_for_one_month_year <- function(presences_data, absences_data, year, month, sample_ratio = 1.2) {
+balance_data_for_one_month_year <- function(presences_data, absences_data, year, month, sample_ratio = 1.3) {
   presences_filtered <- filter_by_year_month(presences_data, year, month)
   absences_filtered <- filter_by_year_month(absences_data, year, month)
   num_presences <- nrow(presences_filtered)

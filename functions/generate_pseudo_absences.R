@@ -12,7 +12,7 @@ create_biomod_data <- function(env, species_occurrence_data) {
   species_presence_data <- species_occurrence_data$presence_data
   species_coordinates <- species_occurrence_data$coordinates
   studied_species_name <- species_occurrence_data$species_name
-  n_absences <- ceiling(length(species_presence_data) / 5)
+  n_absences <- ceiling(length(species_presence_data) / 2)
   
   # Generar el objeto biomod_data con pseudo-ausencias usando el método 'sre'
   set.seed(5555)
