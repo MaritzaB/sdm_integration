@@ -24,17 +24,19 @@ create_output_directory <- function(season, n_vars) {
 }
 
 # Función para generar y guardar el boxplot de evaluación del conjunto de entrenamiento y prueba
-generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir) {
+generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir, scales = "fixed") {
   training_boxplot <- bm_PlotEvalBoxplot(
     bm.out = myBiomodModelOut, 
     group.by = c('algo', 'algo'), 
     dataset = 'calibration', 
-    do.plot = FALSE)
+    do.plot = FALSE,
+    scales = scales)
   testing_boxplot <- bm_PlotEvalBoxplot(
     bm.out = myBiomodModelOut,
     group.by = c('algo', 'algo'),
     dataset = 'evaluation',
-    do.plot = FALSE)
+    do.plot = FALSE,
+    scales = scales)
   
   # Personalizar y guardar gráficos
   training_boxplot_gg <- training_boxplot$plot +
