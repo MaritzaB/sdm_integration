@@ -50,7 +50,7 @@ sample_absences <- function(absences_data, num_presences, sample_ratio) {
 }
 
 # Función para balancear los datos por año y mes
-balance_data_for_one_month_year <- function(presences_data, absences_data, year, month, sample_ratio = 1.3) {
+balance_data_for_one_month_year <- function(presences_data, absences_data, year, month, sample_ratio) {
   presences_filtered <- filter_by_year_month(presences_data, year, month)
   absences_filtered <- filter_by_year_month(absences_data, year, month)
   num_presences <- nrow(presences_filtered)
@@ -64,7 +64,7 @@ balance_data_for_one_month_year <- function(presences_data, absences_data, year,
 }
 
 # Función principal para balancear los datos por mes y año
-balance_data_by_month_year <- function(presences_data, absences_data, sample_ratio = 1.2) {
+balance_data_by_month_year <- function(presences_data, absences_data, sample_ratio) {
   unique_year_months <- presences_data %>%
     select(nyear, nmonth) %>%
     distinct()

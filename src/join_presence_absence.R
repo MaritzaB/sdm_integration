@@ -46,7 +46,7 @@ for (name in names(presence_absence_files)) {
   presence_data <- read.csv(paste0(presence_dir, "/", presence_absence_files[[name]]$presence))
   absence_data <- read.csv(paste0(absence_dir, "/", presence_absence_files[[name]]$absence))
   out_file <- paste0(out_dir, name, ".csv")
-  balanced_dataset <- balance_data_by_month_year(presence_data, absence_data, sample_ratio = 1.2)
+  balanced_dataset <- balance_data_by_month_year(presence_data, absence_data, sample_ratio = 1.5)
   write.csv(balanced_dataset, out_file, row.names = FALSE)
   cat("Archivo balanceado creado:", out_file, "\n")
 }
