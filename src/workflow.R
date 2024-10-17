@@ -2,9 +2,9 @@ source("src/create_model.R")
 source("src/load_model.R")
 
 
-seasons <- c('incubacion', 'empollamiento', 'crianza')
-#seasons <- c('incubacion')
-nvariables <- c(2, 4)
+#seasons <- c('incubacion', 'empollamiento', 'crianza')
+seasons <- c('incubacion')
+nvariables <- c(4,2)
 
 for (season in seasons) {
   for (n_vars in nvariables) {
@@ -22,7 +22,7 @@ for (season in seasons) {
     # Ejecutar las funciones del flujo de trabajo
     create_biomod_model(season, n_vars)
     get_model_evaluations(season, n_vars)
-    #project_model(season, n_vars)
+    project_model(season, n_vars)
     
     # Registrar el tiempo de finalización
     end_time <- Sys.time()

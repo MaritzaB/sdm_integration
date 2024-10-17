@@ -7,10 +7,15 @@ source("functions/process_raster_data.R")
 source("functions/modeling_tools.R")
 
 # Función para evaluar el modelo
-evaluate_biomod_model <- function(myBiomodModelOut) {
-  print("Evaluación del modelo")
+evaluate_biomod_model <- function(myBiomodModelOut, season, n_vars, out_dir) {
+  cat("Evaluación del modelo para:", season, "con", n_vars, "variables\n")
+  print(out_dir)
   myBiomodModelEval <- get_evaluations(myBiomodModelOut)
-  return(myBiomodModelEval)
+  print(class(myBiomodModelEval))
+  
+  file_name <- paste0(out_dir, "/eval_", season, "_", n_vars, "vars.csv")
+  write.csv(myBiomodModelEval, file = file_name, row.names = FALSE)
+  cat("Evaluación guardada en:", file_name, "\n")
 }
 
 # Función para crear el directorio de salida si no existe
@@ -82,8 +87,8 @@ generate_variable_importance_plot <- function(myBiomodModelOut, out_dir) {
 # Función principal que integra todo el flujo
 get_model_evaluations <- function(season, n_vars) {
   myBiomodModelOut <- load_biomod_model(season, n_vars)
-  evaluate_biomod_model(myBiomodModelOut)
-  out_dir <- create_output_directory(season, n_vars)
-  generate_evaluation_boxplots(myBiomodModelOut, out_dir)
-  generate_variable_importance_plot(myBiomodModelOut, out_dir)
+  out_directory <- create_output_directory(season, n_vars)
+  evaluate_biomod_model(myBiomodModelOut, season, n_vars, out_directory)
+  generate_evaluation_boxplots(myBiomodModelOut, out_directory)
+  generate_variable_importance_plot(myBiomodModelOut, out_directory)
 }
