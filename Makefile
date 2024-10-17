@@ -41,8 +41,10 @@ clean:
 clean_models:
 	rm -rf Phoebastria.Immutabilis/
 
+clean_connection_data:
+	rm -rf data/
+
 full_clean: clean
-	rm --force -R data/
 	rm -rf presence_data_2v/
 	rm -rf presence_data_4v/
 	rm -rf Phoebastria.Immutabilis/
