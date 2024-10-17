@@ -2,8 +2,8 @@ source("src/create_model.R")
 source("src/load_model.R")
 
 
-#seasons <- c('incubacion', 'empollamiento', 'crianza')
-seasons <- c('incubacion')
+seasons <- c('incubacion', 'empollamiento', 'crianza')
+#seasons <- c('incubacion')
 nvariables <- c(2, 4)
 
 for (season in seasons) {

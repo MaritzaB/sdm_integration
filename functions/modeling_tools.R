@@ -1,4 +1,5 @@
-
+# Calcular las proporciones de presencia y ausencia en los conjuntos de
+# entrenamiento y prueba
 calculate_proportions <- function(train_data, test_data, column_name) {
   # Calcular totales generales
   total_train <- nrow(train_data)
@@ -35,4 +36,21 @@ calculate_proportions <- function(train_data, test_data, column_name) {
   cat("Número de registros en test_data:", total_test, "\n")
   cat("Número de puntos de presencia en test_data:", test_presences, "(", round(test_presences_proportion, 2), "%)\n")
   cat("Número de puntos de ausencia en test_data:", test_absences, "(", round(test_absences_proportion, 2), "%)\n")
+}
+
+# Función para cargar el modelo si existe
+load_biomod_model <- function(season, n_vars) {
+  id <- paste0(season, "_", n_vars, "vars")
+  file.out <- paste0("Phoebastria.Immutabilis/Phoebastria.Immutabilis.", id, ".models.out")
+  
+  print(file.out)
+  
+  if (file.exists(file.out)) {
+    myBiomodModelOut <- get(load(file.out))
+    print("Modelo cargado exitosamente")
+    print(myBiomodModelOut)
+    return(myBiomodModelOut)
+  } else {
+    stop("El archivo del modelo no existe.")
+  }
 }

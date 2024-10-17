@@ -4,7 +4,7 @@ library(tidyverse)
 library(ggplot2)
 source("functions/create_biomod_data_object.R")
 source("functions/process_raster_data.R")
-source("functions/models_tools.R")
+source("functions/modeling_tools.R")
 
 # Función para evaluar el modelo
 evaluate_biomod_model <- function(myBiomodModelOut) {

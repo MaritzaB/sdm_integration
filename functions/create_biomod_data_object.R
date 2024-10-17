@@ -36,9 +36,7 @@ get_biomod_data_object <- function(season, n_vars) {
   
   n_obs <- nrow(train_data)
   train_data <- train_data[sample(n_obs),]
-  print("Dimensiones del conjunto de entrenamiento")
-  print(dim(train_data))
-  
+
   coordinates_columns <- c("longitude", "latitude")
   
   binary_class_train_set <- train_data$phoebastria_immutabilis
@@ -48,8 +46,9 @@ get_biomod_data_object <- function(season, n_vars) {
   species_presence_data_test <- test_data$phoebastria_immutabilis
   environmental_variables_test <- test_data[, environmental_features]
   coordinates_test <- test_data[, coordinates_columns]
-  print("Dimensiones del conjunto de prueba")
-  print(dim(test_data))
+
+  print("Proporciones de presencia y ausencia:")
+  calculate_proportions(train_data, test_data, "phoebastria_immutabilis")
   
   species_biomod_data <- BIOMOD_FormatingData(
     resp.var = binary_class_train_set,

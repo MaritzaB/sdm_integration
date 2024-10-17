@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
   library(lattice)
   source("functions/create_biomod_data_object.R")
   source("src/project_model.R")
+  source("functions/modeling_tools.R")
 })
 
 create_biomod_model <- function(season, n_vars) {

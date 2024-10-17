@@ -1,7 +1,8 @@
+library(ggplot2)
 library(biomod2)
 library(terra)
 source("functions/process_raster_data.R")
-source("functions/models_tools.R")
+source("functions/modeling_tools.R")
 
 # Función para generar el ráster de entorno según la temporada
 generate_environment_raster <- function(season, n_vars) {
@@ -25,6 +26,7 @@ generate_environment_raster <- function(season, n_vars) {
 # Función para proyectar los datos usando el modelo cargado
 project_biomod_model <- function(myBiomodModelOut, env, season, n_vars) {
   id <- paste0(season, "_", n_vars, "vars")
+  
   # Cargar los modelos construidos
   modelos <- get_built_models(myBiomodModelOut, run = 'allRun')
   
@@ -47,11 +49,9 @@ project_biomod_model <- function(myBiomodModelOut, env, season, n_vars) {
   return(myBiomodProj)
 }
 
-# Función para visualizar, graficar y guardar las proyecciones
-plot_and_save_projections <- function(myBiomodProj, season, n_vars) {
+plot_predictions <- function(myBiomodProj, season, n_vars) {
   myCurrentProj <- get_predictions(myBiomodProj)
   print(myCurrentProj)
-  
   # Crear directorio de salida
   id <- paste0(season, "_", n_vars, "vars")
   output_dir <- paste0("figures/projections/", id, "/")
@@ -79,5 +79,5 @@ project_model <- function(season, n_vars) {
   myBiomodModelOut <- load_biomod_model(season, n_vars)
   test_env <- generate_environment_raster(season, n_vars)
   myBiomodProj <- project_biomod_model(myBiomodModelOut, test_env, season, n_vars)
-  plot_and_save_projections(myBiomodProj, season, n_vars)
+  plot_predictions(myBiomodProj, season, n_vars)
 }
