@@ -53,7 +53,7 @@ project_biomod_model <- function(myBiomodModelOut, env, season, n_vars) {
 
 plot_predictions <- function(myBiomodProj, season, n_vars) {
   myCurrentProj <- get_predictions(myBiomodProj)
-  output_dir <- paste0("figures/projections/", season, "_", n_vars)
+  output_dir <- paste0("figures/projections/", season, "_", n_vars, "vars")
   
   if (!dir.exists(output_dir)) {
     dir.create(output_dir, recursive = TRUE)
