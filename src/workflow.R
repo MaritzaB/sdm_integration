@@ -2,9 +2,10 @@ source("src/create_model.R")
 source("src/load_model.R")
 
 
-#seasons <- c('incubacion', 'empollamiento', 'crianza')
+seasons <- c('incubacion', 'empollamiento', 'crianza')
 seasons <- c('incubacion')
 nvariables <- c(4,2)
+single_models <- c('GLM', 'MARS', 'RF', 'GBM', 'MAXNET')
 
 for (season in seasons) {
   for (n_vars in nvariables) {
@@ -20,7 +21,7 @@ for (season in seasons) {
     cat("=========================================\n\n")
     
     # Ejecutar las funciones del flujo de trabajo
-    create_biomod_model(season, n_vars)
+    create_biomod_model(season, n_vars, single_models)
     get_model_evaluations(season, n_vars)
     project_model(season, n_vars)
     
