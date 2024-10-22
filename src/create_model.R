@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
   source("functions/modeling_tools.R")
 })
 
-create_biomod_model <- function(season, n_vars) {
+create_biomod_model <- function(season, n_vars, models_list) {
   # Crear el id para el modelado
   id <- paste0(season, "_", n_vars, "vars")
   print(id)
@@ -24,9 +24,6 @@ create_biomod_model <- function(season, n_vars) {
   # Obtener el objeto biomod
   biomod_crianza <- get_biomod_data_object(season, n_vars)
   print(biomod_crianza)
-  
-  # Modelos a utilizar
-  single_models <- c('GLM', 'GAM', 'GBM', 'MARS', 'RF')
   
   # Configuración para Random Forest
   RF <- list(
@@ -45,7 +42,7 @@ create_biomod_model <- function(season, n_vars) {
   # Opciones de modelado
   myOpt <- bm_ModelingOptions(
     data.type = 'binary',
-    models = single_models,
+    models = models_list,
     strategy = 'user.defined',
     user = user.val,
     user.base = 'bigboss',
@@ -56,7 +53,7 @@ create_biomod_model <- function(season, n_vars) {
   myBiomodelOut <- BIOMOD_Modeling(
     bm.format = biomod_crianza,
     modeling.id = id,
-    models = single_models,
+    models = models_list,
     CV.strategy = 'strat',
     CV.nb.rep = 10,
     CV.k = 5,
