@@ -1,3 +1,0 @@
-FROM valentinchdock/docker-wallace:1.0.3 as builder
-
-EXPOSE 3838
