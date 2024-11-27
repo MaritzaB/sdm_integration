@@ -5,9 +5,10 @@ RUN apt-get update && apt-get install -y \
     libgdal-dev \
     libproj-dev
 
-RUN R -e "install.packages(c('biomod2', 'dismo', 'ggplot', 'ggmap', 'sf'), dependencies = TRUE)"
+RUN R -e "install.packages(c('biomod2', 'dismo', 'ggplot2', 'ggmap', 'sf'), dependencies = TRUE)"
 
-FROM rocker/rstudio:4.4.0
+# Segunda etapa usando la misma imagen base para mantener compatibilidad de bibliotecas
+FROM rocker/geospatial:latest
 
 # Copiar las librerías de R instaladas en la etapa de construcción
 COPY --from=builder /usr/local/lib/R/site-library /usr/local/lib/R/site-library
