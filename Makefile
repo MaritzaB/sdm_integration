@@ -70,5 +70,7 @@ presence_absence_2vars: absence_2var_extraction
 presence_absence_4vars: absence_4var_extraction
 	Rscript src/join_presence_absence.R 4
 
-models: presence_absence_2vars presence_absence_4vars
+data: presence_absence_2vars presence_absence_4vars
+
+models: 
 	Rscript src/workflow.R
