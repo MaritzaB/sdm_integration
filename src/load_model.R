@@ -29,13 +29,15 @@ create_output_directory <- function(season, n_vars) {
 }
 
 # Función para generar y guardar el boxplot de evaluación del conjunto de entrenamiento y prueba
-generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir, scales = "fixed") {
+generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir, season, scales = "fixed") {
+  # Generar los boxplots para entrenamiento y prueba
   training_boxplot <- bm_PlotEvalBoxplot(
     bm.out = myBiomodModelOut, 
     group.by = c('algo', 'algo'), 
     dataset = 'calibration', 
     do.plot = FALSE,
     scales = scales)
+  
   testing_boxplot <- bm_PlotEvalBoxplot(
     bm.out = myBiomodModelOut,
     group.by = c('algo', 'algo'),
@@ -43,9 +45,9 @@ generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir, scales = "fi
     do.plot = FALSE,
     scales = scales)
   
-  # Personalizar y guardar gráficos
+  # Personalizar y guardar gráficos de entrenamiento
   training_boxplot_gg <- training_boxplot$plot +
-    ggtitle("Evaluación del Modelo - Conjunto de entrenamiento") +
+    ggtitle(paste("Evaluación del Modelo - Conjunto de entrenamiento - Temporada:", season)) +
     xlab("Método de clasificación") +
     ylab("Valor de la métrica de evaluación") +
     ylim(0, 1) +
@@ -54,8 +56,9 @@ generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir, scales = "fi
   training_boxplot_filename <- paste0(out_dir, "boxplot_evaluacion_trainingSet.png")
   ggsave(filename = training_boxplot_filename, plot = training_boxplot_gg, width = 8, height = 6)
   
+  # Personalizar y guardar gráficos de prueba
   testing_boxplot_gg <- testing_boxplot$plot +
-    ggtitle("Evaluación del Modelo - Conjunto de prueba") +
+    ggtitle(paste("Evaluación del Modelo - Conjunto de prueba - Temporada:", season)) +
     xlab("Método de clasificación") +
     ylab("Valor de la métrica de evaluación") +
     ylim(0, 1) +
@@ -65,11 +68,13 @@ generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir, scales = "fi
   ggsave(filename = testing_boxplot_filename, plot = testing_boxplot_gg, width = 8, height = 6)
 }
 
+
 # Función para calcular e imprimir la importancia de las variables
-generate_variable_importance_plot <- function(myBiomodModelOut, out_dir) {
+generate_variable_importance_plot <- function(myBiomodModelOut, out_dir, season) {
   print("Importancia de variables")
   MyBiomodModelVarImp <- get_variables_importance(myBiomodModelOut)
   df <- MyBiomodModelVarImp[, 3:ncol(MyBiomodModelVarImp)]
+  
   avg_var_importance <- df %>%
     group_by(algo, expl.var) %>%
     summarize(mean_importance = mean(var.imp), .groups = 'drop')
@@ -77,7 +82,7 @@ generate_variable_importance_plot <- function(myBiomodModelOut, out_dir) {
   plot_var_importance <- ggplot(avg_var_importance, aes(x = reorder(expl.var, mean_importance), y = mean_importance, fill = algo)) +
     geom_bar(stat = "identity", position = "dodge") +
     coord_flip() +
-    labs(title = "Importancia Promedio de las Variables por Algoritmo",
+    labs(title = paste("Importancia Promedio de las Variables por Algoritmo - Temporada:", season),
          x = "Variable",
          y = "Importancia Promedio") +
     theme(plot.title = element_text(hjust = 0.5))
@@ -91,6 +96,6 @@ get_model_evaluations <- function(season, n_vars) {
   myBiomodModelOut <- load_biomod_model(season, n_vars)
   out_directory <- create_output_directory(season, n_vars)
   evaluate_biomod_model(myBiomodModelOut, season, n_vars, out_directory)
-  generate_evaluation_boxplots(myBiomodModelOut, out_directory)
-  generate_variable_importance_plot(myBiomodModelOut, out_directory)
+  generate_evaluation_boxplots(myBiomodModelOut, out_directory, season)
+  generate_variable_importance_plot(myBiomodModelOut, out_directory, season)
 }
