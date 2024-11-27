@@ -40,11 +40,11 @@ year_month_test_empollamiento <- list(
 
 year_month_train_crianza <- list(
   c("2014", "03"), c("2014", "04"), c("2014", "05"),
-  c("2015", "03"),
-  c("2016", "03"), c("2016", "04")
+  c("2015", "03")
 )
 
 year_month_test_crianza <- list(
+  c("2016", "03"), c("2016", "04"),
   c("2017", "03")
 )
 

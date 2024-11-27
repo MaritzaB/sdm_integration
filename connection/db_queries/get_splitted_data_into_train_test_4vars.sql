@@ -18,7 +18,7 @@ from
     1 as Phoebastria_immutabilis,
     case 
         when nyear = 2018 then 'test'
-        when nmonth in (4) and nyear = 2016 or nmonth in (3) and nyear = 2017 then 'test'
+        when nmonth in (3,4,5) and nyear >= 2016 then 'test'
         else 'train'
     end as dataset_type
   from presence_data_4vars as pd4
