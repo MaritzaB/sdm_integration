@@ -22,8 +22,8 @@ create_biomod_model <- function(season, n_vars, models_list) {
   print(id)
   
   # Obtener el objeto biomod
-  biomod_crianza <- get_biomod_data_object(season, n_vars)
-  print(biomod_crianza)
+  biomod_object <- get_biomod_data_object(season, n_vars)
+  print(biomod_object)
   
   # Configuración para Random Forest
   RF <- list(
@@ -46,21 +46,21 @@ create_biomod_model <- function(season, n_vars, models_list) {
     strategy = 'user.defined',
     user = user.val,
     user.base = 'bigboss',
-    bm.format = biomod_crianza
+    bm.format = biomod_object
   )
   
   # Ejecutar el modelado
   myBiomodelOut <- BIOMOD_Modeling(
-    bm.format = biomod_crianza,
+    bm.format = biomod_object,
     modeling.id = id,
     models = models_list,
     CV.strategy = 'strat',
     CV.nb.rep = 10,
     CV.k = 5,
     CV.balance = 'presences',
-    CV.strat = 'x',
+    CV.strat = 'both',
     OPT.user = myOpt,
-    metric.eval = c('ACCURACY', 'TSS', 'ROC'),
+    metric.eval = c('TSS', 'ROC'),
     var.import = 4,
     seed.val = 42
   )
