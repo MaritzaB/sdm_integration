@@ -48,6 +48,7 @@ generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir, scales = "fi
     ggtitle("Evaluación del Modelo - Conjunto de entrenamiento") +
     xlab("Método de clasificación") +
     ylab("Valor de la métrica de evaluación") +
+    ylim(0, 1) +
     theme(plot.title = element_text(hjust = 0.5))
   
   training_boxplot_filename <- paste0(out_dir, "boxplot_evaluacion_trainingSet.png")
@@ -57,6 +58,7 @@ generate_evaluation_boxplots <- function(myBiomodModelOut, out_dir, scales = "fi
     ggtitle("Evaluación del Modelo - Conjunto de prueba") +
     xlab("Método de clasificación") +
     ylab("Valor de la métrica de evaluación") +
+    ylim(0, 1) +
     theme(plot.title = element_text(hjust = 0.5))
   
   testing_boxplot_filename <- paste0(out_dir, "boxplot_evaluacion_testingSet.png")
