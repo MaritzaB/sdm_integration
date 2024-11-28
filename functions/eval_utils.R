@@ -23,7 +23,7 @@ combine_evaluations <- function(season_list, nvars) {
   return(combined_evaluations)
 }
 
-filter_roc_values <- function(data, metric = "ROC") {
+filter_metric_values <- function(data, metric = "ROC") {
   roc_data <- data %>% filter(metric.eval == metric & run != 'allRun') %>% 
         select(temporada, algo, run, evaluation)
   return(roc_data)
@@ -111,6 +111,8 @@ count_first_place <- function(data) {
     count(first_place, name = "count") %>%
     complete(first_place = algorithm_names, fill = list(count = 0)) %>%
     arrange(desc(count))
+
+  colnames(first_place_counts) <- c("Algoritmo", "Conteo")
   
   return(first_place_counts)
 }
