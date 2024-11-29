@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     libgdal-dev \
     libproj-dev
 
-RUN R -e "install.packages(c('biomod2', 'dismo', 'ggplot2', 'ggmap', 'sf', 'PMCMRplus'), dependencies = TRUE)"
+RUN R -e "install.packages(c('biomod2', 'dismo', 'ggplot2', 'ggmap', 'sf', 'PMCMRplus', 'ggcorrplot', 'patchwork'), dependencies = TRUE)"
 
 # Segunda etapa usando la misma imagen base para mantener compatibilidad de bibliotecas
 FROM rocker/geospatial:latest
