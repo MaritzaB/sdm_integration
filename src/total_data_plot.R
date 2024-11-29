@@ -17,7 +17,7 @@ ggplot(data, aes(x = year_month, y = total_puntos, fill = as.factor(mes))) +
        fill = "Mes") +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),  # Rotar etiquetas del eje X
-    legend.position.inside = c(0.95, 0.7),  # Posicionar la leyenda (x, y) dentro del gráfico
+    legend.position = c(0.93, 0.75),  # Posicionar la leyenda (x, y) dentro del gráfico
     legend.background = element_rect(fill = "white", color = "black"),  # Fondo blanco para la leyenda
     legend.title = element_text(size = 10),  # Ajustar tamaño del título de la leyenda
     legend.text = element_text(size = 8)  # Ajustar tamaño del texto de la leyenda
