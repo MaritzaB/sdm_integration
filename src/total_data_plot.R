@@ -11,16 +11,13 @@ meses <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Agosto", "Dic
 # Crear el gráfico coloreando por mes con la paleta Set2
 ggplot(data, aes(x = year_month, y = total_puntos, fill = as.factor(mes))) +
   geom_col(color = "black") +  # Gráfico de barras
-  geom_text(aes(label = total_puntos), 
-            position = position_stack(vjust = 0.5),  # Posicionar en el centro de la barra
-            color = "white", size = 3) +  # Color de las etiquetas
-  labs(title = "Total de Puntos por Año y Mes", 
+  labs(title = "Cantidad de puntos de presencia por año y mes", 
        x = "Año-Mes", 
        y = "Total Puntos", 
        fill = "Mes") +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),  # Rotar etiquetas del eje X
-    legend.position = c(0.95, 0.7),  # Posicionar la leyenda (x, y) dentro del gráfico
+    legend.position.inside = c(0.95, 0.7),  # Posicionar la leyenda (x, y) dentro del gráfico
     legend.background = element_rect(fill = "white", color = "black"),  # Fondo blanco para la leyenda
     legend.title = element_text(size = 10),  # Ajustar tamaño del título de la leyenda
     legend.text = element_text(size = 8)  # Ajustar tamaño del texto de la leyenda
