@@ -15,7 +15,7 @@ graficar_best_score <- function(data, n_vars, metric, directorio = "resultados_c
          x = "Algoritmo",
          y = paste("Score", toupper(metric))) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_y_continuous(limits = c(0.3, 1))  # Escala de evaluación (Y) entre 0.3 y 1
+    scale_y_continuous(limits = c(0.4, 1))  # Escala de evaluación (Y) entre 0.3 y 1
   
   ggsave(nombre_archivo, plot = p, width = 8, height = 6, dpi = 300)
   return(p)

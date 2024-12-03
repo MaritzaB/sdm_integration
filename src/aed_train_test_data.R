@@ -4,7 +4,7 @@ library(dplyr)
 library(patchwork) # Para combinar gráficos
 
 # Directorio donde están los archivos
-data_dir <- "presence_absence_2vars/"
+data_dir <- "presence_absence_4vars/"
 
 # Lista de archivos
 files <- list(
@@ -32,7 +32,7 @@ combined_data <- bind_rows(datasets)
 # Filtrar solo presencias
 presence_data <- combined_data %>% filter(phoebastria_immutabilis == 1)
 
-# Crear gráficos para cada variable
+# Crear gráficos para cada variable con la leyenda debajo
 plot_chlc <- ggplot(presence_data, aes(x = season, y = chlc, fill = type)) +
   geom_boxplot() +
   scale_y_log10() + # Aplicar escala logarítmica
@@ -41,7 +41,8 @@ plot_chlc <- ggplot(presence_data, aes(x = season, y = chlc, fill = type)) +
        x = "Temporada Reproductiva", 
        y = "Log(Clorofila) (mg/m³)", 
        fill = "Conjunto") +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = "bottom")
 
 plot_sst <- ggplot(presence_data, aes(x = season, y = sst, fill = type)) +
   geom_boxplot() +
@@ -50,7 +51,8 @@ plot_sst <- ggplot(presence_data, aes(x = season, y = sst, fill = type)) +
        x = "Temporada Reproductiva", 
        y = "SST (°C)", 
        fill = "Conjunto") +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = "bottom")
 
 plot_wind_speed <- ggplot(presence_data, aes(x = season, y = wind_speed, fill = type)) +
   geom_boxplot() +
@@ -59,7 +61,8 @@ plot_wind_speed <- ggplot(presence_data, aes(x = season, y = wind_speed, fill = 
        x = "Temporada Reproductiva", 
        y = "Velocidad del Viento (m/s)", 
        fill = "Conjunto") +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = "bottom")
 
 plot_wind_direction <- ggplot(presence_data, aes(x = season, y = wind_direction, fill = type)) +
   geom_boxplot() +
@@ -68,13 +71,15 @@ plot_wind_direction <- ggplot(presence_data, aes(x = season, y = wind_direction,
        x = "Temporada Reproductiva", 
        y = "Dirección del Viento (°)", 
        fill = "Conjunto") +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = "bottom")
 
 # Combinar gráficos verticalmente
 final_plot <- plot_chlc / plot_sst / plot_wind_speed / plot_wind_direction
+#final_plot <- plot_chlc / plot_sst
 
 # Guardar el gráfico combinado
-ggsave("figures/boxplots_variables_ambientales_2vars.png", plot = final_plot, width = 10, height = 16)
+ggsave("figures/boxplots_variables_ambientales_4vars.png", plot = final_plot, width = 10, height = 14)
 
 # Mostrar el gráfico en pantalla
 print(final_plot)
