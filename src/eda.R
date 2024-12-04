@@ -54,8 +54,8 @@ crear_grafico <- function(archivo_4vars, archivo_2vars, metrica = "ROC", output_
   # Añadir título al gráfico combinado
   combined_plot <- wrap_plots(plots, ncol = 3) +
     plot_annotation(
-      title = paste("Análisis Comparativo de", metrica, ": Algoritmos y Variables por Temporada Reproductiva"),
-      subtitle = "Media y desviación estándar para cada temporada reproductiva",
+      title = paste("Análisis Comparativo de", metrica, ": Algoritmos y número de variables por temporada reproductiva"),
+      subtitle = "Media y desviación estándar de la métrica",
       theme = theme(
         plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
         plot.subtitle = element_text(hjust = 0.5, size = 14),
