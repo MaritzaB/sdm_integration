@@ -43,6 +43,9 @@ crear_grafico <- function(archivo_4vars, archivo_2vars, metrica = "ROC", output_
         geom_point(size = 3, position = position_dodge(0.5)) +
         geom_errorbar(aes(ymin = media - std, ymax = media + std),
                       position = position_dodge(0.5), width = 0.25) +
+        geom_text(aes(label = round(std, 2), 
+                      y = media + std + 0.01),  # Ajusta la posición vertical para que las etiquetas no se sobrepongan
+                  position = position_dodge(0.01), size = 3, color = "black", vjust = 0) +
         geom_line(aes(group = variables), position = position_dodge(0.5), linetype = "dashed") +
         scale_y_continuous(limits = y_limits) +  # Fijar los límites del eje y
         labs(title = unique(df$temporada),
@@ -64,7 +67,7 @@ crear_grafico <- function(archivo_4vars, archivo_2vars, metrica = "ROC", output_
     )
   
   # Guardar el gráfico con el título centrado
-  ggsave(output_file, plot = combined_plot, width = 12, height = 10, dpi = 500)
+  ggsave(output_file, plot = combined_plot, width = 12, height = 10, dpi = 800)
 
 }
 

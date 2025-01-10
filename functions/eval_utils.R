@@ -56,8 +56,12 @@ eval_data_wide <- function(data) {
 }
 
 run_friedman_test <- function(data_wide) {
-  # Aplicar la prueba de Friedman a la matriz de valores
-  friedman_test <- friedman.test(as.matrix(data_wide[, -c(1,2)]))  # Excluir "temporada" y "run"
+  # Transformar los valores de ROC a 1 - ROC
+  data_transformed <- data_wide %>%
+    mutate(across(GLM:MAXNET, ~ 1 - .))
+  # Aplicar la prueba de Friedman a la matriz transformada
+  #friedman_test <- friedman.test(as.matrix(data_wide[, -c(1,2)]))
+  friedman_test <- friedman.test(as.matrix(data_transformed[, -c(1, 2)]))  # Excluir "temporada" y "run"
   p_value <- friedman_test[["p.value"]]
   print(paste("El valor p de la prueba de Friedman es:", p_value))
 
@@ -77,7 +81,7 @@ get_best_model_names_by_season <- function(data, season) {
     mutate(model_name = paste("Phoebastria.Immutabilis_allData", run, algo, sep = "_")) %>%
     pull(model_name)
   concatenated_string <- paste(selected_data, collapse = ", ")
-  
+  concatenated_string <- strsplit(concatenated_string, ", ")[[1]]
   return(concatenated_string)
 }
 
@@ -116,3 +120,10 @@ count_first_place <- function(data) {
   
   return(first_place_counts)
 }
+
+n_vars <- 2
+best_metric_score_per_algo <- read.csv(paste0("resultados_comparacion/",n_vars, "vars_roc/best_metric_score_per_algo_",n_vars,"vars.csv"))
+  modelos <- get_best_model_names_by_season(best_metric_score_per_algo, "crianza")
+  modelos <- strsplit(modelos, ", ")[[1]]
+  print("Modelos seleccionados:")
+  print(modelos)

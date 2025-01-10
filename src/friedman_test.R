@@ -15,7 +15,7 @@ graficar_best_score <- function(data, n_vars, metric, directorio = "resultados_c
          x = "Algoritmo",
          y = paste("Score", toupper(metric))) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_y_continuous(limits = c(0.4, 1))  # Escala de evaluación (Y) entre 0.3 y 1
+    scale_y_continuous(limits = c(0.3, 0.85))  # Escala de evaluación (Y) entre 0.3 y 1
   
   ggsave(nombre_archivo, plot = p, width = 8, height = 6, dpi = 300)
   return(p)
@@ -44,8 +44,8 @@ pipeline_comparacion_modelos <- function(season_list, n_vars, metric, directorio
   
   # Obtener el mejor puntaje por temporada
   best_metric_score_per_season <- get_best_run_per_season(metric_data)
-  print("Mejor puntaje por temporada:")
-  print(best_metric_score_per_season)
+  #print("Mejor puntaje por temporada:")
+  #print(best_metric_score_per_season)
   
   # Obtener el mejor puntaje por temporada y algoritmo
   best_metric_score_per_algo <- get_best_run_per_season_and_algorithm(metric_data)
@@ -56,6 +56,8 @@ pipeline_comparacion_modelos <- function(season_list, n_vars, metric, directorio
   
   # Contar primeros lugares por algoritmo
   first_place_counts <- count_first_place(metric_data_wide)
+  print("Conteo de primeros lugares por algoritmo:")
+  first_place_counts
   guardar_df_csv(first_place_counts, n_vars, directorio)
   
   # Realizar la prueba de Friedman
