@@ -12,7 +12,6 @@ suppressPackageStartupMessages({
   library(nlme)
   library(lattice)
   source("functions/create_biomod_data_object.R")
-  source("src/project_model.R")
   source("functions/modeling_tools.R")
 })
 
@@ -48,6 +47,8 @@ create_biomod_model <- function(season, n_vars, models_list) {
     user.base = 'bigboss',
     bm.format = biomod_object
   )
+
+  print(myOpt)
   
   # Ejecutar el modelado
   myBiomodelOut <- BIOMOD_Modeling(
@@ -66,5 +67,5 @@ create_biomod_model <- function(season, n_vars, models_list) {
   )
   
   # Obtener las opciones del modelo
-  get_options(myBiomodelOut)
+  cat(get_options(myBiomodelOut))
 }
