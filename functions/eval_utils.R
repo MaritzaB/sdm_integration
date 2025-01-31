@@ -121,9 +121,9 @@ count_first_place <- function(data) {
   return(first_place_counts)
 }
 
-n_vars <- 2
-best_metric_score_per_algo <- read.csv(paste0("resultados_comparacion/",n_vars, "vars_roc/best_metric_score_per_algo_",n_vars,"vars.csv"))
-  modelos <- get_best_model_names_by_season(best_metric_score_per_algo, "crianza")
-  modelos <- strsplit(modelos, ", ")[[1]]
-  print("Modelos seleccionados:")
-  print(modelos)
+#n_vars <- 2
+#best_metric_score_per_algo <- read.csv(paste0("resultados_comparacion/",n_vars, "vars_roc/best_metric_score_per_algo_",n_vars,"vars.csv"))
+#  modelos <- get_best_model_names_by_season(best_metric_score_per_algo, "crianza")
+#  modelos <- strsplit(modelos, ", ")[[1]]
+#  print("Modelos seleccionados:")
+#  print(modelos)

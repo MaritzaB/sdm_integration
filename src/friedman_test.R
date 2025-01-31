@@ -15,7 +15,7 @@ graficar_best_score <- function(data, n_vars, metric, directorio = "resultados_c
          x = "Algoritmo",
          y = paste("Score", toupper(metric))) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_y_continuous(limits = c(0.3, 0.85))  # Escala de evaluación (Y) entre 0.3 y 1
+    scale_y_continuous(limits = c(0.56, 0.95))  # Escala de evaluación (Y) entre 0.3 y 1
   
   ggsave(nombre_archivo, plot = p, width = 8, height = 6, dpi = 300)
   return(p)
@@ -114,6 +114,6 @@ pipeline_completo <- function(season_list, n_vars_list, metric_list, directorio_
 
 season_list <- c("incubacion", "empollamiento", "crianza")
 n_vars_list <- c(4, 2)
-metric_list <- c("ROC", "TSS")
+metric_list <- c("ROC", "TSS", "ACCURACY")
 
 pipeline_completo(season_list, n_vars_list, metric_list)

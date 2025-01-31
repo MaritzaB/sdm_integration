@@ -49,7 +49,6 @@ project_biomod_model <- function(myBiomodModelOut, env, season, n_vars) {
     clamping.mask = FALSE,
     models.chosen = modelos,
     metric.binary = 'TSS',
-#    metric.filter = 0,
     on_0_1000 = FALSE,
     nb.cpu = 8
   )
@@ -98,7 +97,7 @@ project_model <- function(season, n_vars) {
   myBiomodModelOut <- load_biomod_model(season, n_vars)
   test_env <- generate_environment_raster(season, n_vars)
   myBiomodProj <- project_biomod_model(myBiomodModelOut, test_env, season, n_vars)
-  plot_predictions(myBiomodProj, season, n_vars)
+  #plot_predictions(myBiomodProj, season, n_vars)
 }
 
 seasons <- c("incubacion", "empollamiento", "crianza")
