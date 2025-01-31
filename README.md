@@ -9,6 +9,13 @@
 1. `src/prepare_full_dataset.r`
 1. `src/join_presence_absence.r`
 
+Los resultados de los modelos se generan en la carpeta
+`Phoebastria.Immutabilis`. Si no se desean correr los modelos de nuevo, y en su
+lugar se desean ver los resultados de los modelos ya generados, se puede
+comentar la línea `create_biomod_model(season, n_vars, single_models)` del
+archivo `src/workflow.R` y descomprimir la carpeta `Phoebastria.Immutabilis.zip`
+antes de ejecutar el flujo de trabajo.
+
 Para ejecutar el flujo de trabajo completo se puede usar el siguiente comando:
 
 ```bash
