@@ -1,0 +1,25 @@
+FROM rocker/geospatial:latest as builder
+
+RUN apt-get update && apt-get install -y \
+    libudunits2-dev \
+    libgdal-dev \
+    libproj-dev
+
+RUN R -e "install.packages(c('biomod2', 'dismo', 'ggplot2', 'ggmap', 'sf', 'PMCMRplus', 'ggcorrplot', 'patchwork'), dependencies = TRUE)"
+
+# Segunda etapa usando la misma imagen base para mantener compatibilidad de bibliotecas
+FROM rocker/geospatial:latest
+
+# Copiar las librerías de R instaladas en la etapa de construcción
+COPY --from=builder /usr/local/lib/R/site-library /usr/local/lib/R/site-library
+
+RUN apt-get update && apt-get install -y \
+    libudunits2-dev \
+    libgdal-dev \
+    libproj-dev
+
+# Exponer el puerto 8787 para RStudio
+EXPOSE 8787
+
+# Iniciar RStudio
+CMD ["/init"]
